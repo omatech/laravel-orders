@@ -3,7 +3,6 @@
 namespace Omatech\LaravelOrders\Controllers;
 
 use Omatech\LaravelOrders\Contracts\Cart;
-use Omatech\LaravelOrders\Repositories\Cart\FindCart;
 use Omatech\LaravelOrders\Requests\AddProductToCartRequest;
 
 class CartController
@@ -14,18 +13,12 @@ class CartController
     /**
      * CheckoutController constructor.
      * @param Cart $cart
-     * @param FindCart $findCart
      */
-    public function __construct(Cart $cart, FindCart $findCart)
+    public function __construct(Cart $cart)
     {
         $this->currentCartId = session('orders.current_cart.id');
 
-        if ($this->currentCartId) {
-            $cart->setId($this->currentCartId);
-            $this->cart = $findCart->make($cart);
-        } else {
-            $this->cart = $cart;
-        }
+        $this->cart = $this->currentCartId ? $cart::find($this->currentCartId) : $cart;
     }
 
     /**

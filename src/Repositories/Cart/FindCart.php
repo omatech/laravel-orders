@@ -3,19 +3,31 @@
 namespace Omatech\LaravelOrders\Repositories\Cart;
 
 use Omatech\LaravelOrders\Contracts\Cart;
-use Omatech\LaravelOrders\Models\CartLine;
 use Omatech\LaravelOrders\Repositories\CartRepository;
 
-class FindCart extends CartRepository
+class FindCart extends CartRepository implements \Omatech\LaravelOrders\Contracts\FindCart
 {
+    private $cart;
+
     /**
+     * FindCart constructor.
      * @param Cart $cart
+     * @throws \Exception
+     */
+    public function __construct(Cart $cart)
+    {
+        parent::__construct();
+        $this->cart = $cart;
+    }
+
+    /**
+     * @param int $id
      * @return mixed
      */
-    public function make(Cart $cart)
+    public function make(int $id): Cart
     {
-        $eCart = $this->model->find($cart->getId())->toArray();
+        $cart = $this->model->find($id)->toArray();
 
-        return $cart->load($eCart);
+        return $this->cart->load($cart);
     }
 }

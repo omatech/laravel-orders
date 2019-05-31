@@ -3,11 +3,13 @@
 namespace Omatech\LaravelOrders\Objects;
 
 use Omatech\LaravelOrders\Contracts\SaveCart;
+use Omatech\LaravelOrders\Contracts\FindCart;
 
 class Cart implements \Omatech\LaravelOrders\Contracts\Cart
 {
     private $id;
     private $products = array();
+
     private $save;
 
     public function __construct(SaveCart $save)
@@ -15,9 +17,15 @@ class Cart implements \Omatech\LaravelOrders\Contracts\Cart
         $this->save = $save;
     }
 
+    /**
+     * @param int $id
+     * @return Cart
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
     static public function find(int $id): Cart
     {
-
+        $find = app()->make(FindCart::class);
+        return $find->make($id);
     }
 
     /**

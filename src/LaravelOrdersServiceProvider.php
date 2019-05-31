@@ -5,6 +5,7 @@ namespace Omatech\LaravelOrders;
 //use Illuminate\Routing\Route;
 use Illuminate\Support\ServiceProvider;
 use Omatech\LaravelOrders\Contracts\Cart;
+use Omatech\LaravelOrders\Contracts\FindCart;
 use Omatech\LaravelOrders\Contracts\SaveCart;
 use Omatech\LaravelOrders\Objects\Cart as CartInterface; //TODO canviar el nom de l'as
 use Omatech\LaravelOrders\Objects\CartLine;
@@ -24,6 +25,7 @@ class LaravelOrdersServiceProvider extends ServiceProvider
         $this->app->bind(SaveCart::class, SaveCartCart::class);
         $this->app->bind(\Omatech\LaravelOrders\Contracts\SaveProduct::class, SaveProduct::class);
         $this->app->bind(\Omatech\LaravelOrders\Contracts\CartLine::class, CartLine::class);
+        $this->app->bind(FindCart::class, \Omatech\LaravelOrders\Repositories\Cart\FindCart::class);
         /*
          * Optional methods to load your package assets
          */
