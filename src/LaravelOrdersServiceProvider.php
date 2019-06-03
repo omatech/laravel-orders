@@ -31,7 +31,7 @@ class LaravelOrdersServiceProvider extends ServiceProvider
          */
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'laravel-orders');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'laravel-orders');
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations'); //TODO les hauríem de publicar enlloc de carregar
+//        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations'); //TODO les hauríem de publicar enlloc de carregar
         $this->loadRoutesFrom(__DIR__ . '/routes.php');
 
         if ($this->app->runningInConsole()) {
@@ -43,6 +43,16 @@ class LaravelOrdersServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__ . '/../resources/views' => resource_path('views/vendor/orders'),
             ], 'views');
+
+            // Publishing assets.
+            $this->publishes([
+                __DIR__.'/../database/migrations/2000_create_customers_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'2000_create_customers_table.php'),
+                __DIR__.'/../database/migrations/2500_create_customer_delivery_addresses_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'2500_create_customer_delivery_addresses_table.php'),
+                __DIR__.'/../database/migrations/3000_create_orders_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'3000_create_orders_table.php'),
+                __DIR__.'/../database/migrations/4000_create_order_lines_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'4000_create_order_lines_table.php'),
+                __DIR__.'/../database/migrations/5000_create_carts_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'5000_create_carts_table.php'),
+                __DIR__.'/../database/migrations/6000_create_cart_lines_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'6000_create_cart_lines_table.php'),
+            ], 'migrations');
 
             // Publishing assets.
             /*$this->publishes([
