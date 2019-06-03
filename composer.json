@@ -20,6 +20,7 @@
         "illuminate/support": "5.8.*"
     },
     "require-dev": {
+        "nunomaduro/phpinsights": "^1.5",
         "orchestra/testbench": "3.8.*",
         "phpunit/phpunit": "^7.0"
     },
