@@ -17,13 +17,13 @@ class BaseTestCase extends \Orchestra\Testbench\TestCase
 
     public function getEnvironmentSetUp($app)
     {
-        include_once __DIR__.'/../database/migrations/1000_create_products_table.php';
-        include_once __DIR__.'/../database/migrations/2000_create_customers_table.php';
-        include_once __DIR__.'/../database/migrations/2500_create_customer_delivery_addresses_table.php';
-        include_once __DIR__.'/../database/migrations/3000_create_orders_table.php';
-        include_once __DIR__.'/../database/migrations/4000_create_order_lines_table.php';
-        include_once __DIR__.'/../database/migrations/5000_create_carts_table.php';
-        include_once __DIR__.'/../database/migrations/6000_create_cart_lines_table.php';
+        include_once __DIR__.'/../database/migrations/1000_create_products_table.php.stub';
+        include_once __DIR__.'/../database/migrations/2000_create_customers_table.php.stub';
+        include_once __DIR__.'/../database/migrations/2500_create_customer_delivery_addresses_table.php.stub';
+        include_once __DIR__.'/../database/migrations/3000_create_orders_table.php.stub';
+        include_once __DIR__.'/../database/migrations/4000_create_order_lines_table.php.stub';
+        include_once __DIR__.'/../database/migrations/5000_create_carts_table.php.stub';
+        include_once __DIR__.'/../database/migrations/6000_create_cart_lines_table.php.stub';
 
         (new \CreateProductsTable())->up();
         (new \CreateCustomersTable())->up();

@@ -9,8 +9,10 @@ use Omatech\LaravelOrders\Contracts\FindCart;
 use Omatech\LaravelOrders\Contracts\SaveCart;
 use Omatech\LaravelOrders\Objects\Cart as CartInterface; //TODO canviar el nom de l'as
 use Omatech\LaravelOrders\Objects\CartLine;
+use Omatech\LaravelOrders\Objects\Customer;
 use Omatech\LaravelOrders\Objects\Product;
 use Omatech\LaravelOrders\Repositories\Cart\SaveCartCart;
+use Omatech\LaravelOrders\Repositories\Customer\SaveCustomer;
 use Omatech\LaravelOrders\Repositories\Product\SaveProduct;
 
 class LaravelOrdersServiceProvider extends ServiceProvider
@@ -22,8 +24,10 @@ class LaravelOrdersServiceProvider extends ServiceProvider
     {
         $this->app->bind(Cart::class, CartInterface::class);
         $this->app->bind(\Omatech\LaravelOrders\Contracts\Product::class, Product::class);
+        $this->app->bind(\Omatech\LaravelOrders\Contracts\Customer::class, Customer::class);
         $this->app->bind(SaveCart::class, SaveCartCart::class);
         $this->app->bind(\Omatech\LaravelOrders\Contracts\SaveProduct::class, SaveProduct::class);
+        $this->app->bind(\Omatech\LaravelOrders\Contracts\SaveCustomer::class, SaveCustomer::class);
         $this->app->bind(\Omatech\LaravelOrders\Contracts\CartLine::class, CartLine::class);
         $this->app->bind(FindCart::class, \Omatech\LaravelOrders\Repositories\Cart\FindCart::class);
         /*
@@ -36,7 +40,7 @@ class LaravelOrdersServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../config/config.php' => config_path('orders.php'),
+                __DIR__ . '/../config/orders.php' => config_path('orders.php'),
             ], 'config');
 
             // Publishing the views.
@@ -46,6 +50,7 @@ class LaravelOrdersServiceProvider extends ServiceProvider
 
             // Publishing assets.
             $this->publishes([
+                __DIR__.'/../database/migrations/1000_create_products_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'1000_create_products_table.php'),
                 __DIR__.'/../database/migrations/2000_create_customers_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'2000_create_customers_table.php'),
                 __DIR__.'/../database/migrations/2500_create_customer_delivery_addresses_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'2500_create_customer_delivery_addresses_table.php'),
                 __DIR__.'/../database/migrations/3000_create_orders_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'3000_create_orders_table.php'),
@@ -76,7 +81,7 @@ class LaravelOrdersServiceProvider extends ServiceProvider
     public function register()
     {
         // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'laravel-orders');
+        $this->mergeConfigFrom(__DIR__ . '/../config/orders.php', 'laravel-orders');
 
         // Register the main class to use with the facade
 //        $this->app->singleton('order', function () {
