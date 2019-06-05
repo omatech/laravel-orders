@@ -12,6 +12,7 @@ class Customer implements \Omatech\LaravelOrders\Contracts\Customer
     private $birthday;
     private $phone_number;
     private $gender;
+    private $deliveryAddresses = [];
 
     private $save;
 
@@ -74,6 +75,16 @@ class Customer implements \Omatech\LaravelOrders\Contracts\Customer
         }
 
         return $object;
+    }
+
+    public function setDeliveryAddress(\Omatech\LaravelOrders\Contracts\DeliveryAddress $deliveryAddress)
+    {
+        array_push($this->deliveryAddresses, $deliveryAddress);
+    }
+
+    public function getDeliveryAddresses()
+    {
+        return $this->deliveryAddresses;
     }
 
     /**

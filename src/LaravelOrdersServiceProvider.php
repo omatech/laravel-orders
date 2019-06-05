@@ -10,6 +10,7 @@ use Omatech\LaravelOrders\Contracts\SaveCart;
 use Omatech\LaravelOrders\Objects\Cart as CartInterface; //TODO canviar el nom de l'as
 use Omatech\LaravelOrders\Objects\CartLine;
 use Omatech\LaravelOrders\Objects\Customer;
+use Omatech\LaravelOrders\Objects\DeliveryAddress;
 use Omatech\LaravelOrders\Objects\Product;
 use Omatech\LaravelOrders\Repositories\Cart\SaveCartCart;
 use Omatech\LaravelOrders\Repositories\Customer\SaveCustomer;
@@ -25,6 +26,7 @@ class LaravelOrdersServiceProvider extends ServiceProvider
         $this->app->bind(Cart::class, CartInterface::class);
         $this->app->bind(\Omatech\LaravelOrders\Contracts\Product::class, Product::class);
         $this->app->bind(\Omatech\LaravelOrders\Contracts\Customer::class, Customer::class);
+        $this->app->bind(\Omatech\LaravelOrders\Contracts\DeliveryAddress::class, DeliveryAddress::class);
         $this->app->bind(SaveCart::class, SaveCartCart::class);
         $this->app->bind(\Omatech\LaravelOrders\Contracts\SaveProduct::class, SaveProduct::class);
         $this->app->bind(\Omatech\LaravelOrders\Contracts\SaveCustomer::class, SaveCustomer::class);

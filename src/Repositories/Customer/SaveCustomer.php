@@ -27,6 +27,20 @@ class SaveCustomer extends CustomerRepository implements SaveCustomerInterface
         $model->saveOrFail();
 
         $customer->setId($model->id);
+
+        $deliveryAddresses = $customer->getDeliveryAddresses();
+
+        foreach ($deliveryAddresses as $deliveryAddress) {
+            $currentDeliveryAddress = $deliveryAddress->toArray();
+            $currentDeliveryAddress['customer_id'] = $customer->getId();
+
+            $model->deliveryAddresses()->updateOrCreate([
+                'customer_id' => $currentDeliveryAddress['customer_id'],
+                'first_line' => $currentDeliveryAddress['first_line'],
+                'second_line' => $currentDeliveryAddress['second_line'],
+                'postal_code' => $currentDeliveryAddress['postal_code'],
+            ], $currentDeliveryAddress);
+        }
     }
 
     public function saveIfNotExists(Customer &$customer)
@@ -39,7 +53,7 @@ class SaveCustomer extends CustomerRepository implements SaveCustomerInterface
             if (!empty($data['id'])) {
                 $model = $model->where('id', $data['id']);
             } else {
-                unset($data['id']);
+                unset($data['id'], $data['deliveryAddresses']);
                 foreach ($data as $datumKey => $datumValue) {
                     $model = $model->where($datumKey, $datumValue);
                 }

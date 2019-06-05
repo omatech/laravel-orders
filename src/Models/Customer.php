@@ -23,4 +23,9 @@ class Customer extends Model
             $this->fillable[] = 'user_id';
         }
     }
+
+    public function deliveryAddresses()
+    {
+        return $this->hasMany(DeliveryAddress::class);
+    }
 }
