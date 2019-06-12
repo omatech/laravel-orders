@@ -43,6 +43,12 @@ class CheckoutController extends Controller
         return view('laravel-orders::pages.checkout.delivery');
     }
 
+    public function billing()
+    {
+        //TODO
+        return view('laravel-orders::pages.checkout.billing');
+    }
+
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
