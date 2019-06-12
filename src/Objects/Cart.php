@@ -4,6 +4,7 @@ namespace Omatech\LaravelOrders\Objects;
 
 use Omatech\LaravelOrders\Contracts\Cart as CartInterface;
 use Omatech\LaravelOrders\Contracts\FindCart;
+use Omatech\LaravelOrders\Contracts\Product;
 use Omatech\LaravelOrders\Contracts\SaveCart;
 
 class Cart implements CartInterface
