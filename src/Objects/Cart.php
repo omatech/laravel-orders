@@ -2,10 +2,11 @@
 
 namespace Omatech\LaravelOrders\Objects;
 
-use Omatech\LaravelOrders\Contracts\SaveCart;
+use Omatech\LaravelOrders\Contracts\Cart as CartInterface;
 use Omatech\LaravelOrders\Contracts\FindCart;
+use Omatech\LaravelOrders\Contracts\SaveCart;
 
-class Cart implements \Omatech\LaravelOrders\Contracts\Cart
+class Cart implements CartInterface
 {
     private $id;
     private $products = array();
@@ -22,7 +23,7 @@ class Cart implements \Omatech\LaravelOrders\Contracts\Cart
      * @return Cart
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    static public function find(int $id): Cart
+    static public function find(int $id): ?Cart
     {
         $find = app()->make(FindCart::class);
         return $find->make($id);
@@ -61,7 +62,7 @@ class Cart implements \Omatech\LaravelOrders\Contracts\Cart
         $unset = ['save'];
         $object = get_object_vars($this);
 
-        foreach ($unset as $value){
+        foreach ($unset as $value) {
             unset($object[$value]);
         }
 
@@ -76,23 +77,23 @@ class Cart implements \Omatech\LaravelOrders\Contracts\Cart
     public function push(Product $product): void
     {
         $merge = true;
-        foreach ($this->products as &$currentProduct){
-            if($currentProduct->getProductId() == $product->getId()){
+        foreach ($this->products as &$currentProduct) {
+            if ($currentProduct->getProductId() == $product->getId()) {
                 $merge = false;
                 $currentProduct->setQuantity($currentProduct->getQuantity() + $product->getRequestedQuantity());
                 break;
             }
         }
 
-        if($merge)
-        array_push($this->products, $product->toCartLine());
+        if ($merge)
+            array_push($this->products, $product->toCartLine());
     }
 
     public function pop(Product $product): void
     {
         $productId = $product->getId();
-        foreach ($this->products as $key => $currentProduct){
-            if($currentProduct->getProductId() == $productId){
+        foreach ($this->products as $key => $currentProduct) {
+            if ($currentProduct->getProductId() == $productId) {
                 unset($this->products[$key]);
                 break;
             }

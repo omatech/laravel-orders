@@ -24,10 +24,10 @@ class FindCart extends CartRepository implements \Omatech\LaravelOrders\Contract
      * @param int $id
      * @return mixed
      */
-    public function make(int $id): Cart
+    public function make(int $id): ?Cart
     {
-        $cart = $this->model->find($id)->toArray();
+        $cart = optional($this->model->find($id))->toArray();
 
-        return $this->cart->load($cart);
+        return is_array($cart) ? $this->cart->load($cart) : null;
     }
 }

@@ -10,4 +10,6 @@ interface Cart
 
     public function getId();
 
+    public static function find(int $id);
+
 }
