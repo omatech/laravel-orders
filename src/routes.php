@@ -17,4 +17,5 @@ Route::namespace('Omatech\LaravelOrders\Controllers')
     ->group(function ($route) {
 
         $route->post('add-product', 'CartController@addProduct')->name('addProduct');
+        $route->post('assign-delivery-address', 'CartController@assignDeliveryAddress')->name('assignDeliveryAddress');
     });

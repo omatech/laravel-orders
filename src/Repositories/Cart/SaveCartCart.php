@@ -21,8 +21,18 @@ class SaveCartCart extends CartRepository implements SaveCart //TODO canviar el 
             }
         }
 
-        $model->fill($cart->toArray());
+        $cartToArray = $cart->toArray();
+        $deliveryAddress = $cartToArray['deliveryAddress'];
 
+        if (!is_null($deliveryAddress) && is_array($deliveryAddress)) {
+            unset($cartToArray['deliveryAddress']);
+            foreach ($deliveryAddress as $deliveryAddressField => $deliveryAddressValue) {
+                if (!is_null($deliveryAddressValue))
+                    $cartToArray['delivery_address_' . $deliveryAddressField] = $deliveryAddressValue;
+            }
+        }
+
+        $model->fill($cartToArray);
         $model->saveOrFail();
 
         $cart->setId($model->id);
@@ -39,7 +49,7 @@ class SaveCartCart extends CartRepository implements SaveCart //TODO canviar el 
                     'cart_id' => $currentProduct['cart_id']
                 ], $currentProduct);
 
-            }else{
+            } else {
                 $model->cartLines()
                     ->where('product_id', $currentProduct['product_id'])
                     ->where('cart_id', $currentProduct['cart_id'])

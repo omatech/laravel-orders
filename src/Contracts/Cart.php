@@ -10,6 +10,10 @@ interface Cart
 
     public function getId();
 
+    public function setDeliveryAddress(DeliveryAddress $deliveryAddress);
+
+    public function getDeliveryAddress();
+
     public function load(array $data);
 
     public function save();

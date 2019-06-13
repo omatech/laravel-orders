@@ -5,6 +5,8 @@ namespace Omatech\LaravelOrders\Objects;
 
 class DeliveryAddress implements \Omatech\LaravelOrders\Contracts\DeliveryAddress
 {
+    private $id;
+    private $customer_id;
     private $first_name;
     private $last_name;
     private $first_line;
@@ -15,6 +17,39 @@ class DeliveryAddress implements \Omatech\LaravelOrders\Contracts\DeliveryAddres
     private $country;
     private $is_a_company;
     private $company_name;
+
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id): void
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCustomerId()
+    {
+        return $this->customer_id;
+    }
+
+    /**
+     * @param mixed $customerId
+     */
+    public function setCustomerId($customerId): void
+    {
+        $this->customer_id = $customerId;
+    }
 
     /**
      * @return mixed
@@ -185,6 +220,9 @@ class DeliveryAddress implements \Omatech\LaravelOrders\Contracts\DeliveryAddres
     {
         if (key_exists('id', $data))
             $this->setId($data['id']);
+
+        if (key_exists('customer_id', $data))
+            $this->setCustomerId($data['customer_id']);
 
         if (key_exists('first_name', $data))
             $this->setFirstName($data['first_name']);
