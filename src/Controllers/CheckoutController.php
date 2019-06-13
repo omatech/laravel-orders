@@ -20,7 +20,7 @@ class CheckoutController extends Controller
         $this->middleware([ThrowErrorIfSessionCartIdNotExists::class]);
 
         $this->currentCartId = session('orders.current_cart.id');
-        $this->cart = $cart::find($this->currentCartId);//TODO el find no retorna les cart_lines
+        $this->cart = $cart::find($this->currentCartId);
 
     }
 

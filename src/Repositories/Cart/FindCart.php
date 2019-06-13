@@ -2,27 +2,34 @@
 
 namespace Omatech\LaravelOrders\Repositories\Cart;
 
-use Illuminate\Support\Arr;
 use Omatech\LaravelOrders\Contracts\Cart;
 use Omatech\LaravelOrders\Contracts\DeliveryAddress;
+use Omatech\LaravelOrders\Contracts\FindCart as FindCartInterface;
+use Omatech\LaravelOrders\Contracts\Product;
 use Omatech\LaravelOrders\Repositories\CartRepository;
 
-class FindCart extends CartRepository implements \Omatech\LaravelOrders\Contracts\FindCart
+class FindCart extends CartRepository implements FindCartInterface
 {
     private $cart;
     private $deliveryAddress;
+    /**
+     * @var Product
+     */
+    private $product;
 
     /**
      * FindCart constructor.
      * @param Cart $cart
      * @param DeliveryAddress $deliveryAddress
+     * @param Product $product
      * @throws \Exception
      */
-    public function __construct(Cart $cart, DeliveryAddress $deliveryAddress)
+    public function __construct(Cart $cart, DeliveryAddress $deliveryAddress, Product $product)
     {
         parent::__construct();
         $this->cart = $cart;
         $this->deliveryAddress = $deliveryAddress;
+        $this->product = $product;
     }
 
     /**
@@ -31,23 +38,37 @@ class FindCart extends CartRepository implements \Omatech\LaravelOrders\Contract
      */
     public function make(int $id): ?Cart
     {
-        $cart = $this->model->find($id);
+        $cart = $this->model->with('cartLines')->find($id);
 
-        if(is_null($cart)){
+        if (is_null($cart)) {
             return null;
         }
 
+        //Delivery Address
         $attributes = $cart->getAttributes();
         $deliveryAddressFields = [];
 
-        foreach ($attributes as $attributeKey => $attributeValue){
-            if(strpos($attributeKey, 'delivery_address_') === 0){
+        foreach ($attributes as $attributeKey => $attributeValue) {
+            if (strpos($attributeKey, 'delivery_address_') === 0) {
                 $deliveryAddressFields[str_replace("delivery_address_", "", $attributeKey)] = $attributeValue;
             }
         }
 
         $deliveryAddress = $this->deliveryAddress->load($deliveryAddressFields);
 
+        //Products
+        $cartLines = $cart->cartLines()->get();
+
+        foreach ($cartLines as $cartLine){
+            $currentProduct = $this->product->load([
+                'id' => $cartLine->product_id,
+                'requestedQuantity' => $cartLine->quantity
+            ]);
+
+            $this->cart->push($currentProduct);
+        }
+
+        //Load all to a new Cart Object
         $this->cart->load($cart->toArray());
         $this->cart->setDeliveryAddress($deliveryAddress);
 

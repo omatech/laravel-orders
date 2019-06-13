@@ -2,9 +2,11 @@
 
 namespace Omatech\LaravelOrders\Objects;
 
+use Omatech\LaravelOrders\Contracts\CartLine;
+use Omatech\LaravelOrders\Contracts\Product as ProductInterface;
 use Omatech\LaravelOrders\Contracts\SaveProduct;
 
-class Product implements \Omatech\LaravelOrders\Contracts\Product
+class Product implements ProductInterface
 {
     private $id;
     private $requestedQuantity = 0;
@@ -46,6 +48,9 @@ class Product implements \Omatech\LaravelOrders\Contracts\Product
         if (key_exists('id', $data))
             $this->setId($data['id']);
 
+        if (key_exists('requestedQuantity', $data))
+            $this->setRequestedQuantity($data['requestedQuantity']);
+
         return $this;
     }
 
@@ -82,9 +87,12 @@ class Product implements \Omatech\LaravelOrders\Contracts\Product
         $this->save->save($this);
     }
 
-    public function toCartLine(): \Omatech\LaravelOrders\Contracts\CartLine
+    /**
+     * @return CartLine
+     */
+    public function toCartLine(): CartLine
     {
-        return app(\Omatech\LaravelOrders\Contracts\CartLine::class)->load([
+        return app(CartLine::class)->load([
             'product_id' => $this->id,
             'quantity' => $this->requestedQuantity
         ]);
