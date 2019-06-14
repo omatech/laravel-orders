@@ -39,10 +39,14 @@ class CheckoutController extends Controller
      */
     public function delivery()
     {
-        //TODO
-        return view('laravel-orders::pages.checkout.delivery');
+        return view('laravel-orders::pages.checkout.delivery', [
+            'cart' => $this->cart
+        ]);
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function billing()
     {
         //TODO
