@@ -13,7 +13,7 @@ class CreateCustomerDeliveryAddressesTable extends Migration
      */
     public function up()
     {
-        Schema::create('customer_delivery_addresses', function (Blueprint $table) {
+        Schema::create('customer_billing_data', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('customer_id');
             
@@ -43,6 +43,6 @@ class CreateCustomerDeliveryAddressesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('customer_delivery_addresses');
+        Schema::dropIfExists('customer_billing_data');
     }
 }
