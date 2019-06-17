@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller;
 use Omatech\LaravelOrders\Contracts\Cart;
 use Omatech\LaravelOrders\Middleware\ThrowErrorIfSessionCartIdNotExists;
 use Omatech\LaravelOrders\Requests\AddProductToCartRequest;
+use Omatech\LaravelOrders\Requests\AssignABillingDataToCart;
 use Omatech\LaravelOrders\Requests\AssignADeliveryAddressToCart;
 
 
@@ -22,7 +23,7 @@ class CartController extends Controller
     public function __construct(Cart $cart)
     {
         $this->middleware([ThrowErrorIfSessionCartIdNotExists::class])
-            ->only(['assignDeliveryAddress']);
+            ->only(['assignDeliveryAddress', 'assignBillingData']);
 
         $this->currentCartId = session('orders.current_cart.id');
 
@@ -55,6 +56,25 @@ class CartController extends Controller
         $deliveryAddress = $request->get('delivery_address');
 
         $this->cart->setDeliveryAddress($deliveryAddress);
+
+        $this->cart->save();
+
+        $redirect = $request->get('redirect');
+
+        if (is_a($redirect, RedirectResponse::class)) {
+            return $redirect;
+        }
+    }
+
+    /**
+     * @param AssignABillingDataToCart $request
+     * @return mixed
+     */
+    public function assignBillingData(AssignABillingDataToCart $request)
+    {
+        $billingData = $request->get('billing_data');
+
+        $this->cart->setBillingData($billingData);
 
         $this->cart->save();
 

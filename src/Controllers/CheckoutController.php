@@ -49,8 +49,9 @@ class CheckoutController extends Controller
      */
     public function billing()
     {
-        //TODO
-        return view('laravel-orders::pages.checkout.billing');
+        return view('laravel-orders::pages.checkout.billing', [
+            'cart' => $this->cart
+        ]);
     }
 
     /**

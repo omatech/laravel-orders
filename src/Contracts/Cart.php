@@ -14,6 +14,10 @@ interface Cart
 
     public function getDeliveryAddress();
 
+    public function getBillingData();
+
+    public function setBillingData(BillingData $billingData);
+
     public function load(array $data);
 
     public function save();

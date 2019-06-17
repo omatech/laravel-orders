@@ -2,6 +2,7 @@
 
 namespace Omatech\LaravelOrders\Objects;
 
+use Omatech\LaravelOrders\Contracts\BillingData;
 use Omatech\LaravelOrders\Contracts\Cart as CartInterface;
 use Omatech\LaravelOrders\Contracts\DeliveryAddress;
 use Omatech\LaravelOrders\Contracts\FindCart;
@@ -11,8 +12,9 @@ use Omatech\LaravelOrders\Contracts\SaveCart;
 class Cart implements CartInterface
 {
     private $id;
-    private $products = array();
+    private $products = [];
     private $deliveryAddress;
+    private $billingData;
 
     private $save;
 
@@ -76,6 +78,25 @@ class Cart implements CartInterface
         return $this->deliveryAddress;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getBillingData(): BillingData
+    {
+        return $this->billingData;
+    }
+
+    /**
+     * @param mixed $billingData
+     */
+    public function setBillingData(BillingData $billingData): void
+    {
+        $this->billingData = $billingData;
+    }
+
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         $unset = ['save'];

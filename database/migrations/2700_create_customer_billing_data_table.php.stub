@@ -1,0 +1,48 @@
+<?php
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class CreateCustomerDeliveryAddressesTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('customer_delivery_addresses', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('customer_id');
+            
+            $table->string('address_first_name')->nullable();
+            $table->string('address_last_name')->nullable();
+            $table->string('address_first_line')->nullable();
+            $table->string('address_second_line')->nullable();
+            $table->string('address_postal_code')->nullable();
+            $table->string('address_city')->nullable();
+            $table->string('address_region')->nullable();
+            $table->string('address_country')->nullable();
+            $table->string('company_name')->nullable();
+            $table->string('cif')->nullable();
+            $table->string('phone_number')->nullable();
+            
+            $table->timestamps();
+            $table->softDeletes();
+
+            $table->foreign('customer_id')->references('id')->on('customers')->onDelete('no action')->onUpdate('no action');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('customer_delivery_addresses');
+    }
+}

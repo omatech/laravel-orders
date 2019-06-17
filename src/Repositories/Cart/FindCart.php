@@ -2,6 +2,7 @@
 
 namespace Omatech\LaravelOrders\Repositories\Cart;
 
+use Omatech\LaravelOrders\Contracts\BillingData;
 use Omatech\LaravelOrders\Contracts\Cart;
 use Omatech\LaravelOrders\Contracts\DeliveryAddress;
 use Omatech\LaravelOrders\Contracts\FindCart as FindCartInterface;
@@ -16,17 +17,28 @@ class FindCart extends CartRepository implements FindCartInterface
      * @var Product
      */
     private $product;
+    /**
+     * @var BillingData
+     */
+    private $billingData;
 
     /**
      * FindCart constructor.
+     * @param BillingData $billingData
      * @param Cart $cart
      * @param DeliveryAddress $deliveryAddress
      * @param Product $product
      * @throws \Exception
      */
-    public function __construct(Cart $cart, DeliveryAddress $deliveryAddress, Product $product)
+    public function __construct(
+        BillingData $billingData,
+        Cart $cart,
+        DeliveryAddress $deliveryAddress,
+        Product $product
+    )
     {
         parent::__construct();
+        $this->billingData = $billingData;
         $this->cart = $cart;
         $this->deliveryAddress = $deliveryAddress;
         $this->product = $product;
@@ -44,8 +56,9 @@ class FindCart extends CartRepository implements FindCartInterface
             return null;
         }
 
-        //Delivery Address
         $attributes = $cart->getAttributes();
+
+        //Delivery Address
         $deliveryAddressFields = [];
 
         foreach ($attributes as $attributeKey => $attributeValue) {
@@ -56,10 +69,21 @@ class FindCart extends CartRepository implements FindCartInterface
 
         $deliveryAddress = $this->deliveryAddress->load($deliveryAddressFields);
 
+        //Billing Data
+        $billingDataFields = [];
+
+        foreach ($attributes as $attributeKey => $attributeValue) {
+            if (strpos($attributeKey, 'billing_') === 0) {
+                $billingDataFields[str_replace("billing_", "", $attributeKey)] = $attributeValue;
+            }
+        }
+
+        $billingData = $this->billingData->load($billingDataFields);
+
         //Products
         $cartLines = $cart->cartLines()->get();
 
-        foreach ($cartLines as $cartLine){
+        foreach ($cartLines as $cartLine) {
             $currentProduct = $this->product->load([
                 'id' => $cartLine->product_id,
                 'requestedQuantity' => $cartLine->quantity
@@ -71,6 +95,7 @@ class FindCart extends CartRepository implements FindCartInterface
         //Load all to a new Cart Object
         $this->cart->load($cart->toArray());
         $this->cart->setDeliveryAddress($deliveryAddress);
+        $this->cart->setBillingData($billingData);
 
         return $this->cart;
     }

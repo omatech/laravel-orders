@@ -9,6 +9,9 @@ use Omatech\LaravelOrders\Repositories\CartRepository;
 class SaveCartCart extends CartRepository implements SaveCart //TODO canviar el nom de la classe
 {
 
+    /**
+     * @param Cart $cart
+     */
     public function save(Cart &$cart)
     {
         $model = $this->model;
@@ -29,6 +32,16 @@ class SaveCartCart extends CartRepository implements SaveCart //TODO canviar el 
             foreach ($deliveryAddress as $deliveryAddressField => $deliveryAddressValue) {
                 if (!is_null($deliveryAddressValue))
                     $cartToArray['delivery_address_' . $deliveryAddressField] = $deliveryAddressValue;
+            }
+        }
+
+        $billingData = $cartToArray['billingData'];
+
+        if (!is_null($billingData) && is_array($billingData)) {
+            unset($cartToArray['billingData']);
+            foreach ($billingData as $billingDataField => $billingDataValue) {
+                if (!is_null($billingDataValue))
+                    $cartToArray['billing_' . $billingDataField] = $billingDataValue;
             }
         }
 

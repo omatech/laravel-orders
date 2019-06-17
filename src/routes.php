@@ -7,6 +7,7 @@ Route::namespace('Omatech\LaravelOrders\Controllers')
 
         $route->get('basket', 'CheckoutController@basket')->name('basket');
         $route->get('delivery', 'CheckoutController@delivery')->name('delivery');
+        $route->get('billing', 'CheckoutController@billing')->name('billing');
         $route->get('payment', 'CheckoutController@payment')->name('payment');
         $route->get('summary', 'CheckoutController@summary')->name('summary');
     });
@@ -18,4 +19,5 @@ Route::namespace('Omatech\LaravelOrders\Controllers')
 
         $route->post('add-product', 'CartController@addProduct')->name('addProduct');
         $route->post('assign-delivery-address', 'CartController@assignDeliveryAddress')->name('assignDeliveryAddress');
+        $route->post('assign-billing-data', 'CartController@assignBillingData')->name('assignBillingData');
     });
