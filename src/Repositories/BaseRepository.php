@@ -11,6 +11,7 @@ abstract class BaseRepository
 
     /**
      * BaseRepository constructor.
+     *
      * @throws Exception
      */
     public function __construct()

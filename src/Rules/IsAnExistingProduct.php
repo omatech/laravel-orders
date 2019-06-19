@@ -2,7 +2,6 @@
 
 namespace Omatech\LaravelOrders\Rules;
 
-
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 use Omatech\LaravelOrders\Contracts\Product;

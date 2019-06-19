@@ -284,8 +284,7 @@ class BillingData implements BillingDataInterface
      */
     public function toArray(): array
     {
-        $object = get_object_vars($this);
-        return $object;
+        return get_object_vars($this);
     }
 
 }

@@ -45,11 +45,13 @@ class Product implements ProductInterface
      */
     public function load(array $data): Product
     {
-        if (key_exists('id', $data))
+        if (key_exists('id', $data)) {
             $this->setId($data['id']);
+        }
 
-        if (key_exists('requestedQuantity', $data))
+        if (key_exists('requestedQuantity', $data)) {
             $this->setRequestedQuantity($data['requestedQuantity']);
+        }
 
         return $this;
     }
@@ -75,7 +77,7 @@ class Product implements ProductInterface
         $unset = ['save'];
         $object = get_object_vars($this);
 
-        foreach ($unset as $value){
+        foreach ($unset as $value) {
             unset($object[$value]);
         }
 

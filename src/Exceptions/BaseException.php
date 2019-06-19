@@ -8,6 +8,7 @@ class BaseException extends Exception
 {
     /**
      * BaseException constructor.
+     *
      * @param $message
      * @param $code
      */
