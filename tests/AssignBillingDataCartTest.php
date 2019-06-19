@@ -2,12 +2,11 @@
 
 namespace Omatech\LaravelOrders\Tests;
 
-use Omatech\LaravelOrders\Contracts\Cart;
 use Omatech\LaravelOrders\Contracts\BillingData;
+use Omatech\LaravelOrders\Contracts\Cart;
 
 class AssignBillingDataCartTest extends BaseTestCase
 {
-    protected $route;
     protected $object;
     protected $example;
 
@@ -19,7 +18,6 @@ class AssignBillingDataCartTest extends BaseTestCase
         parent::setUp();
 
         $this->object = app()->make(BillingData::class);
-        $this->route = route('orders.cart.assignBillingData');
         $this->example = $this->object->load([
             'address_first_name' => 'Test',
             'address_last_name' => 'Test',
@@ -36,47 +34,13 @@ class AssignBillingDataCartTest extends BaseTestCase
     }
 
     /** @test * */
-    public function call_without_redirect()
-    {
-        $cart = tap(app()->make(Cart::class))->save();
-        $billingData = $this->example;
-
-        $response = $this->withSession(['orders.current_cart.id' => $cart->getId()])
-            ->post($this->route, [
-                'billing_data' => $billingData
-            ]);
-
-        $response->assertStatus(200);
-    }
-
-    /** @test * */
-    public function call_with_redirect()
-    {
-        $cart = tap(app()->make(Cart::class))->save();
-        $billingData = $this->example;
-
-        $routeUri = 'from';
-
-        $response = $this->withSession(['orders.current_cart.id' => $cart->getId()])
-            ->post($this->route, [
-                'billing_data' => $billingData,
-                'redirect' => redirect($routeUri)
-            ]);
-
-        $response->assertStatus(302);
-        $response->assertRedirect($routeUri);
-    }
-
-    /** @test * */
     public function check_billing_data_is_assigned_to_cart()
     {
         $cart = tap(app()->make(Cart::class))->save();
         $billingData = $this->example;
 
-        $this->withSession(['orders.current_cart.id' => $cart->getId()])
-            ->post($this->route, [
-                'billing_data' => $billingData,
-            ]);
+        $cart->setBillingData($billingData);
+        $cart->save();
 
         $findCart = app()->make(Cart::class)::find($cart->getId());
 
@@ -93,10 +57,8 @@ class AssignBillingDataCartTest extends BaseTestCase
         $cart = tap(app()->make(Cart::class))->save();
         $billingData = $this->example;
 
-        $this->withSession(['orders.current_cart.id' => $cart->getId()])
-            ->post($this->route, [
-                'billing_data' => $billingData,
-            ]);
+        $cart->setBillingData($billingData);
+        $cart->save();
 
         $this->assertDatabaseHas('carts', [
             'id' => $cart->getId(),
@@ -117,6 +79,8 @@ class AssignBillingDataCartTest extends BaseTestCase
     /** @test * */
     public function try_to_assign_an_incorrect_billing_data_object()
     {
+        $this->expectException(\Throwable::class);
+
         $cart = tap(app()->make(Cart::class))->save();
         $billingData = (object)[
             'address_first_name' => 'Test',
@@ -132,10 +96,8 @@ class AssignBillingDataCartTest extends BaseTestCase
             'phone_number' => '698765432'
         ];
 
-        $this->withSession(['orders.current_cart.id' => $cart->getId()])
-            ->post($this->route, [
-                'billing_data' => $billingData,
-            ]);
+        $cart->setBillingData($billingData);
+        $cart->save();
 
         $this->assertDatabaseMissing('carts', [
             'id' => $cart->getId(),
@@ -150,31 +112,6 @@ class AssignBillingDataCartTest extends BaseTestCase
             'billing_company_name' => $billingData->company_name,
             'billing_cif' => $billingData->cif,
             'billing_phone_number' => $billingData->phone_number,
-        ]);
-    }
-
-    /** @test * */
-    public function assign_billing_data_to_nonexistent_cart()
-    {
-        $billingData = $this->example;
-
-        $this->post($this->route, [
-            'billing_data' => $billingData,
-        ])->assertStatus(500);
-
-        $this->assertDatabaseMissing('carts', [
-            'id' => 1,
-            'billing_address_first_name' => $billingData->getAddressFirstName(),
-            'billing_address_last_name' => $billingData->getAddressLastName(),
-            'billing_address_first_line' => $billingData->getAddressFirstLine(),
-            'billing_address_second_line' => $billingData->getAddressSecondLine(),
-            'billing_address_postal_code' => $billingData->getAddressPostalCode(),
-            'billing_address_city' => $billingData->getAddressCity(),
-            'billing_address_region' => $billingData->getAddressRegion(),
-            'billing_address_country' => $billingData->getAddressCountry(),
-            'billing_company_name' => $billingData->getCompanyName(),
-            'billing_cif' => $billingData->getCif(),
-            'billing_phone_number' => $billingData->getPhoneNumber(),
         ]);
     }
 }

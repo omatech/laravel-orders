@@ -36,9 +36,8 @@ class SaveCartTest extends BaseTestCase
         $data = [];
         $cart->load($data);
 
-        $product = app()->make(Product::class)->load([
-            'id' => rand(1, 9999),
-        ]);
+        $product = app()->make(Product::class);
+        $product->save();
         $product->setRequestedQuantity(4);
 
         $cart->push($product);
@@ -64,16 +63,14 @@ class SaveCartTest extends BaseTestCase
         $data = [];
         $cart->load($data);
 
-        $product = app()->make(Product::class)->load([
-            'id' => 1,
-        ]);
+        $product = app()->make(Product::class);
+        $product->save();
         $product->setRequestedQuantity(4);
 
         $cart->push($product);
 
-        $product2 = app()->make(Product::class)->load([
-            'id' => 2,
-        ]);
+        $product2 = app()->make(Product::class);
+        $product2->save();
         $product2->setRequestedQuantity(5);
 
         $cart->push($product2);
@@ -107,9 +104,8 @@ class SaveCartTest extends BaseTestCase
         $data = ['id' => $fakeCart->getId()];
         $cart->load($data);
 
-        $product = app()->make(Product::class)->load([
-            'id' => rand(1, 999),
-        ]);
+        $product = app()->make(Product::class);
+        $product->save();
 
         $product->setRequestedQuantity(1);
 

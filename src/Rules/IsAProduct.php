@@ -4,10 +4,9 @@ namespace Omatech\LaravelOrders\Rules;
 
 
 use Illuminate\Contracts\Validation\Rule;
-use Illuminate\Support\Facades\Validator;
 use Omatech\LaravelOrders\Contracts\Product;
 
-class IsAnExistingProduct implements Rule
+class IsAProduct implements Rule
 {
 
     /**
@@ -19,13 +18,7 @@ class IsAnExistingProduct implements Rule
      */
     public function passes($attribute, $value)
     {
-        return is_a($value, Product::class)
-            && !is_null($value->getId())
-            && Validator::make([
-                'id' => $value->getId()
-            ], [
-                'id' => 'exists:products,id'
-            ])->passes();
+        return is_a($value, Product::class);
     }
 
     /**
@@ -35,6 +28,6 @@ class IsAnExistingProduct implements Rule
      */
     public function message()
     {
-        return 'Incorrect product or does not exist';
+        return 'Incorrect Product';
     }
 }

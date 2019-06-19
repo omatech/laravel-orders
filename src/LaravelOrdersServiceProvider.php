@@ -13,6 +13,7 @@ use Omatech\LaravelOrders\Contracts\Product as ProductInterface;
 use Omatech\LaravelOrders\Contracts\SaveCart as SaveCartInterface;
 use Omatech\LaravelOrders\Contracts\SaveCustomer as SaveCustomerInterface;
 use Omatech\LaravelOrders\Contracts\SaveProduct as SaveProductInterface;
+use Omatech\LaravelOrders\Middleware\ThrowErrorIfSessionCartIdNotExists;
 use Omatech\LaravelOrders\Objects\BillingData;
 use Omatech\LaravelOrders\Objects\Cart;
 use Omatech\LaravelOrders\Objects\CartLine;
@@ -42,7 +43,6 @@ class LaravelOrdersServiceProvider extends ServiceProvider
         $this->app->bind(SaveCustomerInterface::class, SaveCustomer::class);
         $this->app->bind(SaveProductInterface::class, SaveProduct::class);
 
-        $this->loadRoutesFrom(__DIR__ . '/routes.php');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'laravel-orders');
 
         if ($this->app->runningInConsole()) {
@@ -58,12 +58,14 @@ class LaravelOrdersServiceProvider extends ServiceProvider
 
             // Publishing assets.
             $this->publishes([
-                __DIR__ . '/../database/migrations/1000_create_products_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_1000_create_products_table.php'),
-                __DIR__ . '/../database/migrations/2000_create_customers_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_2000_create_customers_table.php'),
-                __DIR__ . '/../database/migrations/3000_create_orders_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_3000_create_orders_table.php'),
-                __DIR__ . '/../database/migrations/5000_create_carts_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_5000_create_carts_table.php'),
+                __DIR__ . '/../database/migrations/1000_create_products_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '1000_create_products_table.php'),
+                __DIR__ . '/../database/migrations/2000_create_customers_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '2000_create_customers_table.php'),
+                __DIR__ . '/../database/migrations/3000_create_orders_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '3000_create_orders_table.php'),
+                __DIR__ . '/../database/migrations/5000_create_carts_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '5000_create_carts_table.php'),
             ], 'migrations');
         }
+
+        $this->app['router']->aliasMiddleware('checkCartIdInSession', ThrowErrorIfSessionCartIdNotExists::class);
 
     }
 

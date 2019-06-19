@@ -2,6 +2,8 @@
 
 namespace Omatech\LaravelOrders\Repositories\Cart;
 
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Validator;
 use Omatech\LaravelOrders\Contracts\Cart;
 use Omatech\LaravelOrders\Contracts\SaveCart;
 use Omatech\LaravelOrders\Repositories\CartRepository;
@@ -55,20 +57,29 @@ class SaveCartCart extends CartRepository implements SaveCart //TODO canviar el 
             $currentProduct = $cartLine->toArray();
             $currentProduct['cart_id'] = $cart->getId();
 
-            if ($currentProduct['quantity'] > 0) {
+            $validated = config('laravel-orders.options.products.enabled') ? Validator::make([
+                'product_id' => $currentProduct['product_id']
+            ], [
+                'product_id' => 'exists:products,id'
+            ])->passes() : true;
 
-                $model->cartLines()->updateOrCreate([
-                    'product_id' => $currentProduct['product_id'],
-                    'cart_id' => $currentProduct['cart_id']
-                ], $currentProduct);
+            if($validated) {
 
-            } else {
-                $model->cartLines()
-                    ->where('product_id', $currentProduct['product_id'])
-                    ->where('cart_id', $currentProduct['cart_id'])
-                    ->delete();
+                if ($currentProduct['quantity'] > 0) {
 
-                $cart->pop($cartLine->toProduct());
+                    $model->cartLines()->updateOrCreate([
+                        'product_id' => $currentProduct['product_id'],
+                        'cart_id' => $currentProduct['cart_id']
+                    ], $currentProduct);
+
+                } else {
+                    $model->cartLines()
+                        ->where('product_id', $currentProduct['product_id'])
+                        ->where('cart_id', $currentProduct['cart_id'])
+                        ->delete();
+
+                    $cart->pop($cartLine->toProduct());
+                }
             }
 
         }

@@ -9,29 +9,6 @@ use Omatech\LaravelOrders\Repositories\Cart\FindCart;
 
 class AddProductCartTest extends BaseTestCase
 {
-    protected $route;
-
-    /**
-     *
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->route = route('orders.cart.addProduct');
-    }
-
-    /** @test */
-    public function the_route_status_is_200()
-    {
-        $product = app()->make(Product::class);
-        $product->setRequestedQuantity(1);
-        $product->save();
-
-        $this->post($this->route, [
-            'product' => $product
-        ])->assertStatus(200);
-    }
 
     /** @test * */
     public function product_to_nonexisting_cart()
@@ -40,14 +17,11 @@ class AddProductCartTest extends BaseTestCase
         $product->setRequestedQuantity(1);
         $product->save();
 
-        $this->assertFalse(session()->exists('orders.current_cart.id'));
+        $cart = app()->make(Cart::class);
+        $cart->push($product);
+        $cart->save();
 
-        $this->post($this->route, [
-            'product' => $product
-        ]);
-        $this->assertTrue(session()->exists('orders.current_cart.id'));
-
-        $currentCartId = session('orders.current_cart.id');
+        $currentCartId = $cart->getId();
 
         $this->assertDatabaseHas('carts', [
             'id' => $currentCartId
@@ -70,12 +44,8 @@ class AddProductCartTest extends BaseTestCase
         $cart = app()->make(Cart::class);
         $cart->save();
 
-        $data = [
-            'product' => $product
-        ];
-
-        $this->withSession(['orders.current_cart.id' => $cart->getId()])
-            ->post($this->route, $data);
+        $cart->push($product);
+        $cart->save();
 
         $this->assertDatabaseHas('cart_lines', [
             'product_id' => $product->getId(),
@@ -93,10 +63,8 @@ class AddProductCartTest extends BaseTestCase
         $cart = app()->make(Cart::class);
         $cart->save();
 
-        $this->withSession(['orders.current_cart.id' => $cart->getId()])
-            ->post($this->route, [
-                'product' => $product
-            ]);
+        $cart->push($product);
+        $cart->save();
 
         $this->assertDatabaseMissing('cart_lines', [
             'product_id' => $product->getId(),
@@ -114,10 +82,8 @@ class AddProductCartTest extends BaseTestCase
         $cart = app()->make(Cart::class);
         $cart->save();
 
-        $this->withSession(['orders.current_cart.id' => $cart->getId()])
-            ->post($this->route, [
-                'product' => $product
-            ]);
+        $cart->push($product);
+        $cart->save();
 
         $this->assertDatabaseHas('cart_lines', [
             'product_id' => $product->getId(),
@@ -127,10 +93,8 @@ class AddProductCartTest extends BaseTestCase
 
         $product->setRequestedQuantity(3);
 
-        $this->withSession(['orders.current_cart.id' => $cart->getId()])
-            ->post($this->route, [
-                'product' => $product
-            ]);
+        $cart->push($product);
+        $cart->save();
 
         $this->assertDatabaseMissing('cart_lines', [
             'product_id' => $product->getId(),
@@ -155,10 +119,8 @@ class AddProductCartTest extends BaseTestCase
         $cart = app()->make(Cart::class);
         $cart->save();
 
-        $this->withSession(['orders.current_cart.id' => $cart->getId()])
-            ->post($this->route, [
-                'product' => $product
-            ]);
+        $cart->push($product);
+        $cart->save();
 
         $this->assertDatabaseHas('cart_lines', [
             'product_id' => $product->getId(),
@@ -168,10 +130,8 @@ class AddProductCartTest extends BaseTestCase
 
         $product->setRequestedQuantity(-1);
 
-        $this->withSession(['orders.current_cart.id' => $cart->getId()])
-            ->post($this->route, [
-                'product' => $product
-            ]);
+        $cart->push($product);
+        $cart->save();
 
         $this->assertDatabaseMissing('cart_lines', [
             'product_id' => $product->getId(),
@@ -189,10 +149,8 @@ class AddProductCartTest extends BaseTestCase
         $cart = app()->make(Cart::class);
         $cart->save();
 
-        $this->withSession(['orders.current_cart.id' => $cart->getId()])
-            ->post($this->route, [
-                'product' => $product
-            ]);
+        $cart->push($product);
+        $cart->save();
 
         $this->assertDatabaseMissing('cart_lines', [
             'product_id' => $product->getId(),
@@ -210,10 +168,8 @@ class AddProductCartTest extends BaseTestCase
         $cart = app()->make(Cart::class);
         $cart->save();
 
-        $this->withSession(['orders.current_cart.id' => $cart->getId()])
-            ->post($this->route, [
-                'product' => $product
-            ]);
+        $cart->push($product);
+        $cart->save();
 
         $this->assertDatabaseMissing('cart_lines', [
             'product_id' => $product->getId(),
@@ -222,10 +178,8 @@ class AddProductCartTest extends BaseTestCase
 
         $product->setRequestedQuantity(1);
 
-        $this->withSession(['orders.current_cart.id' => $cart->getId()])
-            ->post($this->route, [
-                'product' => $product
-            ]);
+        $cart->push($product);
+        $cart->save();
 
         $this->assertDatabaseHas('cart_lines', [
             'product_id' => $product->getId(),
@@ -235,10 +189,8 @@ class AddProductCartTest extends BaseTestCase
 
         $product->setRequestedQuantity(-2);
 
-        $this->withSession(['orders.current_cart.id' => $cart->getId()])
-            ->post($this->route, [
-                'product' => $product
-            ]);
+        $cart->push($product);
+        $cart->save();
 
         $this->assertDatabaseMissing('cart_lines', [
             'product_id' => $product->getId(),
