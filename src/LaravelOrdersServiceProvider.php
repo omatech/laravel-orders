@@ -9,6 +9,7 @@ use Omatech\LaravelOrders\Contracts\CartLine as CartLineInterface;
 use Omatech\LaravelOrders\Contracts\Customer as CustomerInterface;
 use Omatech\LaravelOrders\Contracts\DeliveryAddress as DeliveryAddressInterface;
 use Omatech\LaravelOrders\Contracts\FindCart as FindCartInterface;
+use Omatech\LaravelOrders\Contracts\FindProduct as FindProductInterface;
 use Omatech\LaravelOrders\Contracts\Product as ProductInterface;
 use Omatech\LaravelOrders\Contracts\SaveCart as SaveCartInterface;
 use Omatech\LaravelOrders\Contracts\SaveCustomer as SaveCustomerInterface;
@@ -23,6 +24,7 @@ use Omatech\LaravelOrders\Objects\Product;
 use Omatech\LaravelOrders\Repositories\Cart\FindCart;
 use Omatech\LaravelOrders\Repositories\Cart\SaveCartCart;
 use Omatech\LaravelOrders\Repositories\Customer\SaveCustomer;
+use Omatech\LaravelOrders\Repositories\Product\FindProduct;
 use Omatech\LaravelOrders\Repositories\Product\SaveProduct;
 
 class LaravelOrdersServiceProvider extends ServiceProvider
@@ -38,6 +40,7 @@ class LaravelOrdersServiceProvider extends ServiceProvider
         $this->app->bind(CustomerInterface::class, Customer::class);
         $this->app->bind(DeliveryAddressInterface::class, DeliveryAddress::class);
         $this->app->bind(FindCartInterface::class, FindCart::class);
+        $this->app->bind(FindProductInterface::class, FindProduct::class);
         $this->app->bind(ProductInterface::class, Product::class);
         $this->app->bind(SaveCartInterface::class, SaveCartCart::class);
         $this->app->bind(SaveCustomerInterface::class, SaveCustomer::class);

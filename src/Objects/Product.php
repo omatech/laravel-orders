@@ -3,6 +3,7 @@
 namespace Omatech\LaravelOrders\Objects;
 
 use Omatech\LaravelOrders\Contracts\CartLine;
+use Omatech\LaravelOrders\Contracts\FindProduct;
 use Omatech\LaravelOrders\Contracts\Product as ProductInterface;
 use Omatech\LaravelOrders\Contracts\SaveProduct;
 
@@ -18,9 +19,10 @@ class Product implements ProductInterface
         $this->save = $save;
     }
 
-    static public function find(int $id): Product
+    static public function find(int $id): ?Product
     {
-        //TODO
+        $find = app()->make(FindProduct::class);
+        return $find->make($id);
     }
 
     /**

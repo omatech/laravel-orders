@@ -5,6 +5,8 @@ namespace Omatech\LaravelOrders\Objects;
 
 //use Omatech\LaravelOrders\Contracts\SaveCart;
 
+use Omatech\LaravelOrders\Contracts\Product;
+
 class CartLine implements \Omatech\LaravelOrders\Contracts\CartLine
 {
     private $id;
@@ -26,6 +28,26 @@ class CartLine implements \Omatech\LaravelOrders\Contracts\CartLine
     static public function find(int $id): CartLine
     {
         //TODO
+    }
+
+    /**
+     * @return mixed
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public function getProduct()
+    {
+        $product = null;
+        if ($productId = $this->getProductId()) {
+            $product = app()->make(Product::class)::find($productId);
+        }
+
+        if (!is_null($product)) {
+            $product->setRequestedQuantity($this->getQuantity());
+        } else {
+            $product = $this->toProduct();
+        }
+
+        return $product;
     }
 
     /**
@@ -118,17 +140,18 @@ class CartLine implements \Omatech\LaravelOrders\Contracts\CartLine
         $unset = ['save'];
         $object = get_object_vars($this);
 
-        foreach ($unset as $value){
+        foreach ($unset as $value) {
             unset($object[$value]);
         }
 
         return $object;
     }
 
-    public function toProduct(): \Omatech\LaravelOrders\Contracts\Product
+    public function toProduct(): Product
     {
-        return app(\Omatech\LaravelOrders\Contracts\Product::class)->load([
+        return app(Product::class)->load([
             'id' => $this->product_id,
+            'requestedQuantity' => $this->quantity
         ]);
     }
 
