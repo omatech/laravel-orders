@@ -19,7 +19,7 @@ class Customer extends Model
     {
         parent::__construct($attributes);
 
-        if (config('orders.options.users.enabled') === true) {
+        if (config('laravel-orders.options.users.enabled') === true) {
             $this->fillable[] = 'user_id';
         }
     }

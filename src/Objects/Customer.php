@@ -20,7 +20,7 @@ class Customer implements \Omatech\LaravelOrders\Contracts\Customer
     {
         $this->save = $save;
 
-        if (config('orders.options.users.enabled') === true) {
+        if (config('laravel-orders.options.users.enabled') === true) {
             $this->user_id = null;
         }
     }
