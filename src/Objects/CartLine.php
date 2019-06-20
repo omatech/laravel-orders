@@ -13,6 +13,7 @@ class CartLine implements \Omatech\LaravelOrders\Contracts\CartLine
     private $product_id;
     private $cart_id;
     private $quantity = 0;
+    private $totalPrice;
 
 //    private $save;
 
@@ -64,6 +65,17 @@ class CartLine implements \Omatech\LaravelOrders\Contracts\CartLine
     public function setQuantity(int $quantity): void
     {
         $this->quantity = $quantity;
+    }
+
+    /**
+     * @return mixed
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public function getTotalPrice()
+    {
+        $product = $this->getProduct();
+
+        return $this->getQuantity() * $product->getUnitPrice();
     }
 
     /**
