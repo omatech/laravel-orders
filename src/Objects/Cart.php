@@ -12,7 +12,7 @@ use Omatech\LaravelOrders\Contracts\SaveCart;
 class Cart implements CartInterface
 {
     private $id;
-    private $products = [];
+    private $orderLines = [];
     private $deliveryAddress;
     private $billingData;
 
@@ -121,7 +121,7 @@ class Cart implements CartInterface
     public function push(Product $product): void
     {
         $merge = true;
-        foreach ($this->products as &$currentProduct) {
+        foreach ($this->orderLines as &$currentProduct) {
             if ($currentProduct->getProductId() == $product->getId()) {
                 $merge = false;
                 $currentProduct->setQuantity($currentProduct->getQuantity() + $product->getRequestedQuantity());
@@ -130,28 +130,22 @@ class Cart implements CartInterface
         }
 
         if ($merge)
-            array_push($this->products, $product->toCartLine());
+            array_push($this->orderLines, $product->toCartLine());
     }
 
     public function pop(Product $product): void
     {
         $productId = $product->getId();
-        foreach ($this->products as $key => $currentProduct) {
+        foreach ($this->orderLines as $key => $currentProduct) {
             if ($currentProduct->getProductId() == $productId) {
-                unset($this->products[$key]);
+                unset($this->orderLines[$key]);
                 break;
             }
         }
     }
 
-    public function getProducts(): array
+    public function getCartLines(): array
     {
-        return $this->products();
-    }
-
-    public function products(): array
-    {
-        //TODO test
-        return $this->products;
+        return $this->orderLines;
     }
 }

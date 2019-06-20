@@ -2,7 +2,6 @@
 
 namespace Omatech\LaravelOrders\Tests;
 
-
 use Omatech\LaravelOrders\Contracts\Cart;
 use Omatech\LaravelOrders\Contracts\CartLine;
 use Omatech\LaravelOrders\Contracts\Product;
@@ -41,7 +40,7 @@ class FindCartTest extends BaseTestCase
 
         $findCart = app()->make(Cart::class)::find($cart->getId());
 
-        $findProducts = $findCart->getProducts();
+        $findProducts = $findCart->getCartLines();
 
         $this->assertFalse(is_null($findProducts));
         $this->assertTrue(is_a($findProducts[0], CartLine::class));

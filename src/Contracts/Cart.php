@@ -26,6 +26,6 @@ interface Cart
 
     public function pop(Product $product);
 
-    public function products();
+    public function getCartLines();
 
 }

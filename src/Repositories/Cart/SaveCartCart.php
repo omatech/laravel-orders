@@ -53,7 +53,7 @@ class SaveCartCart extends CartRepository implements SaveCart //TODO canviar el 
 
         $cart->setId($model->id);
 
-        $cartLines = $cart->products();
+        $cartLines = $cart->getCartLines();
         foreach ($cartLines as $cartLine) {
             $currentProduct = $cartLine->toArray();
             $currentProduct['cart_id'] = $cart->getId();

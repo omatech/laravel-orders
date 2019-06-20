@@ -1,6 +1,6 @@
 @php
 
-$cartLines = $cart->getProducts();
+$cartLines = $cart->getCartLines();
 
 @endphp
 
