@@ -11,6 +11,7 @@ class Product implements ProductInterface
 {
     private $id;
     private $requestedQuantity = 0;
+    private $unitPrice;
 
     private $save;
 
@@ -23,6 +24,22 @@ class Product implements ProductInterface
     {
         $find = app()->make(FindProduct::class);
         return $find->make($id);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUnitPrice()
+    {
+        return $this->unitPrice;
+    }
+
+    /**
+     * @param mixed $unitPrice
+     */
+    public function setUnitPrice($unitPrice): void
+    {
+        $this->unitPrice = $unitPrice;
     }
 
     /**
@@ -53,6 +70,10 @@ class Product implements ProductInterface
 
         if (key_exists('requestedQuantity', $data)) {
             $this->setRequestedQuantity($data['requestedQuantity']);
+        }
+
+        if (key_exists('unitPrice', $data)) {
+            $this->setUnitPrice($data['unitPrice']);
         }
 
         return $this;

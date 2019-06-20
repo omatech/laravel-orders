@@ -12,9 +12,10 @@ use Omatech\LaravelOrders\Contracts\SaveCart;
 class Cart implements CartInterface
 {
     private $id;
-    private $orderLines = [];
+    private $cartLines = [];
     private $deliveryAddress;
     private $billingData;
+    private $totalPrice;
 
     private $save;
 
@@ -95,6 +96,21 @@ class Cart implements CartInterface
     }
 
     /**
+     * @return mixed
+     */
+    public function getTotalPrice()
+    {
+        $cartLines = $this->getCartLines();
+        $totalPrice = 0;
+
+        foreach ($cartLines as $cartLine) {
+            $totalPrice += $cartLine->getQuantity() * optional($cartLine->getProduct())->getUnitPrice();
+        }
+
+        return $totalPrice;
+    }
+
+    /**
      * @return array
      */
     public function toArray(): array
@@ -102,10 +118,10 @@ class Cart implements CartInterface
         $unset = ['save'];
         $object = get_object_vars($this);
 
-        foreach ($object as $key => $value){
-            if(in_array($key, $unset)){
+        foreach ($object as $key => $value) {
+            if (in_array($key, $unset)) {
                 unset($object[$key]);
-            }elseif (is_object($value) && in_array('toArray', get_class_methods($value))){
+            } elseif (is_object($value) && in_array('toArray', get_class_methods($value))) {
                 $object[$key] = $value->toArray();
             }
         }
@@ -121,7 +137,7 @@ class Cart implements CartInterface
     public function push(Product $product): void
     {
         $merge = true;
-        foreach ($this->orderLines as &$currentProduct) {
+        foreach ($this->cartLines as &$currentProduct) {
             if ($currentProduct->getProductId() == $product->getId()) {
                 $merge = false;
                 $currentProduct->setQuantity($currentProduct->getQuantity() + $product->getRequestedQuantity());
@@ -130,15 +146,15 @@ class Cart implements CartInterface
         }
 
         if ($merge)
-            array_push($this->orderLines, $product->toCartLine());
+            array_push($this->cartLines, $product->toCartLine());
     }
 
     public function pop(Product $product): void
     {
         $productId = $product->getId();
-        foreach ($this->orderLines as $key => $currentProduct) {
+        foreach ($this->cartLines as $key => $currentProduct) {
             if ($currentProduct->getProductId() == $productId) {
-                unset($this->orderLines[$key]);
+                unset($this->cartLines[$key]);
                 break;
             }
         }
@@ -146,6 +162,6 @@ class Cart implements CartInterface
 
     public function getCartLines(): array
     {
-        return $this->orderLines;
+        return $this->cartLines;
     }
 }
