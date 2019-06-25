@@ -16,6 +16,7 @@ class Cart implements CartInterface
     private $deliveryAddress;
     private $billingData;
     private $totalPrice;
+    private $numCartLines = 0;
 
     private $save;
 
@@ -107,7 +108,19 @@ class Cart implements CartInterface
             $totalPrice += $cartLine->getQuantity() * optional($cartLine->getProduct())->getUnitPrice();
         }
 
-        return $totalPrice;
+        $this->totalPrice = $totalPrice;
+
+        return $this->totalPrice;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNumCartLines(): int
+    {
+        $this->numCartLines = count($this->getCartLines());
+
+        return $this->numCartLines;
     }
 
     /**

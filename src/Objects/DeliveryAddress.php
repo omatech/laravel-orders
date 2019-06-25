@@ -17,6 +17,8 @@ class DeliveryAddress implements \Omatech\LaravelOrders\Contracts\DeliveryAddres
     private $country;
     private $is_a_company;
     private $company_name;
+    private $phone_number;
+    private $email;
 
 
     /**
@@ -211,6 +213,37 @@ class DeliveryAddress implements \Omatech\LaravelOrders\Contracts\DeliveryAddres
         $this->company_name = $company_name;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getPhoneNumber()
+    {
+        return $this->phone_number;
+    }
+
+    /**
+     * @param mixed $phone_number
+     */
+    public function setPhoneNumber($phone_number): void
+    {
+        $this->phone_number = $phone_number;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param mixed $email
+     */
+    public function setEmail($email): void
+    {
+        $this->email = $email;
+    }
 
     /**
      * @param array $data

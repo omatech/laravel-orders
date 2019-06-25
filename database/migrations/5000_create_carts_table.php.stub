@@ -26,6 +26,8 @@ class CreateCartsTable extends Migration
             $table->string('delivery_address_country')->nullable();
             $table->boolean('delivery_address_is_a_company')->default(false);
             $table->string('delivery_address_company_name')->nullable();
+            $table->string('delivery_address_email')->nullable();
+            $table->string('delivery_address_phone_number')->nullable();
 
             $table->string('billing_address_first_name')->nullable();
             $table->string('billing_address_last_name')->nullable();
