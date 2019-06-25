@@ -2,6 +2,7 @@
 
 namespace Omatech\LaravelOrders\Objects;
 
+use Omatech\LaravelOrders\Contracts\FindCustomer;
 use Omatech\LaravelOrders\Contracts\SaveCustomer;
 
 class Customer implements \Omatech\LaravelOrders\Contracts\Customer
@@ -23,6 +24,28 @@ class Customer implements \Omatech\LaravelOrders\Contracts\Customer
         if (config('laravel-orders.options.users.enabled') === true) {
             $this->user_id = null;
         }
+    }
+
+    /**
+     * @param int $id
+     * @return null|Customer
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public static function find(int $id): ?Customer
+    {
+        $find = app()->make(FindCustomer::class);
+        return $find->make($id);
+    }
+
+    /**
+     * @param int $userId
+     * @return null|Customer
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public static function findByUserId(int $userId): ?Customer
+    {
+        $find = app()->make(FindCustomer::class);
+        return $find->make($userId, 'user_id');
     }
 
     /**

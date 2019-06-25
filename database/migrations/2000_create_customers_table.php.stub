@@ -15,7 +15,6 @@ class CreateCustomersTable extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->bigIncrements('id');
-            //$table->unsignedBigInteger('user_id');
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
             $table->date('birthday')->nullable();
@@ -72,10 +71,14 @@ class CreateCustomersTable extends Migration
                 'transsexual-woman',
                 'two-spirit',
             ])->nullable();
+
+            if(config('laravel-orders.options.users.enabled')) {
+                $table->unsignedBigInteger('user_id');
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('no action')->onUpdate('no action');
+            }
+
             $table->timestamps();
             $table->softDeletes();
-
-            //$table->foreign('user_id')->references('id')->on('users')->onDelete('no action')->onUpdate('no action');
         });
 
         Schema::create('customer_delivery_addresses', function (Blueprint $table) {
