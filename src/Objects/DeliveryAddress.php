@@ -287,6 +287,12 @@ class DeliveryAddress implements \Omatech\LaravelOrders\Contracts\DeliveryAddres
         if (key_exists('company_name', $data))
             $this->setCompanyName($data['company_name']);
 
+        if (key_exists('email', $data))
+            $this->setEmail($data['email']);
+
+        if (key_exists('phone_number', $data))
+            $this->setPhoneNumber($data['phone_number']);
+
         return $this;
     }
 
