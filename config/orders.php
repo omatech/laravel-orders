@@ -3,7 +3,8 @@
 return [
     'options' => [
         'users' => [
-            'enabled' => false
+            'enabled' => false,
+            'model' => 'App\User'
         ],
         'products' => [
             'enabled' => true
