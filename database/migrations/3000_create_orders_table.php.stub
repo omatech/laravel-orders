@@ -16,6 +16,8 @@ class CreateOrdersTable extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->bigIncrements('id');
 
+            $table->unsignedBigInteger('customer_id');
+
 //            $table->string('status');
 //            $table->string('code')->unique();
 
@@ -39,6 +41,8 @@ class CreateOrdersTable extends Migration
 
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('customer_id')->references('id')->on('customers')->onDelete('no action')->onUpdate('no action');
         });
 
         Schema::create('order_lines', function (Blueprint $table) {

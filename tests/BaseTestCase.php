@@ -17,6 +17,13 @@ class BaseTestCase extends TestCase
      */
     protected $enableUsersTests = [];
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->withFactories(realpath(dirname(__DIR__).'/database/factories'));
+    }
+
     /**
      * @param \Illuminate\Foundation\Application $app
      * @return array

@@ -3,6 +3,7 @@
 namespace Omatech\LaravelOrders\Objects;
 
 use Omatech\LaravelOrders\Contracts\FindCustomer;
+use Omatech\LaravelOrders\Contracts\Order;
 use Omatech\LaravelOrders\Contracts\SaveCustomer;
 
 class Customer implements \Omatech\LaravelOrders\Contracts\Customer
@@ -14,6 +15,7 @@ class Customer implements \Omatech\LaravelOrders\Contracts\Customer
     private $phone_number;
     private $gender;
     private $deliveryAddresses = [];
+    private $orders = [];
 
     private $save;
 
@@ -108,6 +110,22 @@ class Customer implements \Omatech\LaravelOrders\Contracts\Customer
     public function getDeliveryAddresses()
     {
         return $this->deliveryAddresses;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOrders(): array
+    {
+        return $this->orders;
+    }
+
+    /**
+     * @param Order $order
+     */
+    public function setOrder(Order $order): void
+    {
+        array_push($this->orders, $order);
     }
 
     /**

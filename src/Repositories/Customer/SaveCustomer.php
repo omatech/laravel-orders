@@ -53,9 +53,17 @@ class SaveCustomer extends CustomerRepository implements SaveCustomerInterface
             if (!empty($data['id'])) {
                 $model = $model->where('id', $data['id']);
             } else {
-                unset($data['id'], $data['deliveryAddresses']);
+                $uniqueFieldsCombo = [
+                    'first_name',
+                    'last_name',
+                    'birthday',
+                    'phone_number',
+                    'gender'
+                ];
                 foreach ($data as $datumKey => $datumValue) {
-                    $model = $model->where($datumKey, $datumValue);
+                    if (in_array($datumKey, $uniqueFieldsCombo)) {
+                        $model = $model->where($datumKey, $datumValue);
+                    }
                 }
             }
 
@@ -65,7 +73,7 @@ class SaveCustomer extends CustomerRepository implements SaveCustomerInterface
 
         if (is_null($exists)) {
             $this->save($customer);
-        }else{
+        } else {
             throw new CustomerAlreadyExistsException();
         }
     }
