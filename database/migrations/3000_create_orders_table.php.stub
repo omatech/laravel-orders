@@ -50,7 +50,7 @@ class CreateOrdersTable extends Migration
 
             $table->unsignedBigInteger('order_id');
 
-//            $table->integer('quantity')->default(1);
+            $table->integer('quantity')->default(1);
 //
 //            $table->decimal('unit_price');
 //            $table->decimal('total_base_price');

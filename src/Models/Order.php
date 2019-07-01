@@ -1,9 +1,5 @@
 <?php
-/**
- * Created by Omatech
- * User: aroca@omatech.com
- * Date: 23/08/18 18:01
- */
+
 namespace Omatech\LaravelOrders\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -29,7 +25,7 @@ class Order extends Model
     }
 
     /**
-     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function customer()
     {
