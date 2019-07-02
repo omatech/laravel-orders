@@ -2,6 +2,7 @@
 
 namespace Omatech\LaravelOrders\Objects;
 
+use Illuminate\Support\Str;
 use Omatech\LaravelOrders\Contracts\OrderLine as OrderLineInterface;
 
 class OrderLine implements OrderLineInterface
@@ -22,6 +23,29 @@ class OrderLine implements OrderLineInterface
             $this->setQuantity($data['quantity']);
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        $unset = ['save'];
+        $object = get_object_vars($this);
+
+        $array = [];
+
+        foreach ($object as $key => $value) {
+            if (in_array($key, $unset)) {
+                unset($object[$key]);
+            } elseif (is_object($value) && in_array('toArray', get_class_methods($value))) {
+                $array[Str::snake($key)] = $value->toArray();
+            }else{
+                $array[Str::snake($key)] = $value;
+            }
+        }
+
+        return $array;
     }
 
     /**

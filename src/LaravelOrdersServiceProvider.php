@@ -17,6 +17,7 @@ use Omatech\LaravelOrders\Contracts\OrderLine as OrderLineInterface;
 use Omatech\LaravelOrders\Contracts\Product as ProductInterface;
 use Omatech\LaravelOrders\Contracts\SaveCart as SaveCartInterface;
 use Omatech\LaravelOrders\Contracts\SaveCustomer as SaveCustomerInterface;
+use Omatech\LaravelOrders\Contracts\SaveOrder as SaveOrderInterface;
 use Omatech\LaravelOrders\Contracts\SaveProduct as SaveProductInterface;
 use Omatech\LaravelOrders\Middleware\ThrowErrorIfSessionCartIdNotExists;
 use Omatech\LaravelOrders\Objects\BillingData;
@@ -32,6 +33,7 @@ use Omatech\LaravelOrders\Repositories\Cart\SaveCartCart;
 use Omatech\LaravelOrders\Repositories\Customer\FindCustomer;
 use Omatech\LaravelOrders\Repositories\Customer\SaveCustomer;
 use Omatech\LaravelOrders\Repositories\Order\FindOrder;
+use Omatech\LaravelOrders\Repositories\Order\SaveOrder;
 use Omatech\LaravelOrders\Repositories\Product\FindProduct;
 use Omatech\LaravelOrders\Repositories\Product\SaveProduct;
 
@@ -56,6 +58,7 @@ class LaravelOrdersServiceProvider extends ServiceProvider
         $this->app->bind(ProductInterface::class, Product::class);
         $this->app->bind(SaveCartInterface::class, SaveCartCart::class);
         $this->app->bind(SaveCustomerInterface::class, SaveCustomer::class);
+        $this->app->bind(SaveOrderInterface::class, SaveOrder::class);
         $this->app->bind(SaveProductInterface::class, SaveProduct::class);
 
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'laravel-orders');
