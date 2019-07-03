@@ -229,13 +229,11 @@ class BillingData implements BillingDataInterface
         $this->phone_number = $phone_number;
     }
 
-
-
     /**
      * @param array $data
      * @return $this
      */
-    public function load(array $data): self
+    public function fromArray(array $data): self
     {
         if (key_exists('id', $data))
             $this->setId($data['id']);
@@ -277,6 +275,16 @@ class BillingData implements BillingDataInterface
             $this->setPhoneNumber($data['phone_number']);
 
         return $this;
+    }
+
+    /**
+     * @param array $data
+     * @return BillingData
+     * @deprecated fromArray should be used directly instead. Will be removed in future versions.
+     */
+    public function load(array $data): self
+    {
+        return $this->fromArray($data);
     }
 
     /**

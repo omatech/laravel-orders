@@ -249,7 +249,7 @@ class DeliveryAddress implements \Omatech\LaravelOrders\Contracts\DeliveryAddres
      * @param array $data
      * @return $this
      */
-    public function load(array $data): self
+    public function fromArray(array $data): self
     {
         if (key_exists('id', $data))
             $this->setId($data['id']);
@@ -296,6 +296,19 @@ class DeliveryAddress implements \Omatech\LaravelOrders\Contracts\DeliveryAddres
         return $this;
     }
 
+    /**
+     * @param array $data
+     * @return DeliveryAddress
+     * @deprecated fromArray should be used directly instead. Will be removed in future versions.
+     */
+    public function load(array $data): self
+    {
+        return $this->fromArray($data);
+    }
+
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         return get_object_vars($this);

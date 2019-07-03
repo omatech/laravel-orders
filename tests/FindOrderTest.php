@@ -2,6 +2,8 @@
 
 namespace Omatech\LaravelOrders\Tests;
 
+use Omatech\LaravelOrders\Contracts\BillingData;
+use Omatech\LaravelOrders\Contracts\DeliveryAddress;
 use Omatech\LaravelOrders\Contracts\OrderLine as OrderLineInterface;
 use Omatech\LaravelOrders\Models\Order as OrderModel;
 use Omatech\LaravelOrders\Models\OrderLine as OrderLineModel;
@@ -46,6 +48,25 @@ class FindOrderTest extends BaseTestCase
         $this->assertFalse(is_null($findOrderLines));
         $this->assertTrue(is_a($findOrderLines[0], OrderLineInterface::class));
         $this->assertEquals($orderLineId, $findOrderLines[0]->getId());
+    }
+
+    /** @test **/
+    public function check_delivery_address_and_billing_data()
+    {
+        $order = factory(OrderModel::class)->create();
+        $orderId = $order->id;
+
+        $findOrder = app()->make(OrderInterface::class)::find($orderId);
+
+        $deliveryAddress = $findOrder->getDeliveryAddress();
+        
+        $this->assertNotNull($deliveryAddress);
+        $this->assertTrue(is_a($deliveryAddress, DeliveryAddress::class));
+
+        $billingData = $findOrder->getBillingData();
+
+        $this->assertNotNull($billingData);
+        $this->assertTrue(is_a($billingData, BillingData::class));
     }
 
 }
