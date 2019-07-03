@@ -4,8 +4,8 @@ namespace Omatech\LaravelOrders\Tests;
 
 use Omatech\LaravelOrders\Contracts\Order;
 use Omatech\LaravelOrders\Contracts\OrderLine;
-use Omatech\LaravelOrders\Contracts\Product;
 use Omatech\LaravelOrders\Models\Customer as CustomerModel;
+use Omatech\LaravelOrders\Models\Order as OrderModel;
 
 class SaveOrderTest extends BaseTestCase
 {
@@ -138,7 +138,7 @@ class SaveOrderTest extends BaseTestCase
         //TODO
     }
 
-    /** @test **/
+    /** @test * */
     public function check_order_code_is_saved()
     {
         $fakeOrder = app()->make(Order::class);
@@ -155,5 +155,18 @@ class SaveOrderTest extends BaseTestCase
         $this->assertDatabaseHas('orders', [
             'code' => $code
         ]);
+    }
+
+    /** @test * */
+    public function check_delivery_address_and_billing_data_are_saved()
+    {
+        $data = factory(OrderModel::class)->make()->toArray();
+
+        $fakeOrder = app()->make(Order::class);
+        $fakeOrder->fromArray($data);
+        $fakeOrder->save();
+
+        $data['code'] = $fakeOrder->getCode();
+        $this->assertDatabaseHas('orders', $data);
     }
 }

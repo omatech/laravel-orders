@@ -15,7 +15,7 @@ class DeliveryAddress implements \Omatech\LaravelOrders\Contracts\DeliveryAddres
     private $city;
     private $region;
     private $country;
-    private $is_a_company;
+    private $is_a_company = false;
     private $company_name;
     private $phone_number;
     private $email;

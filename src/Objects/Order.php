@@ -5,6 +5,7 @@ namespace Omatech\LaravelOrders\Objects;
 use Illuminate\Support\Str;
 use Omatech\LaravelOrders\Contracts\BillingData;
 use Omatech\LaravelOrders\Contracts\DeliveryAddress;
+use Omatech\LaravelOrders\Contracts\FillableOrderAttributes;
 use Omatech\LaravelOrders\Contracts\FindOrder;
 use Omatech\LaravelOrders\Contracts\Order as OrderInterface;
 use Omatech\LaravelOrders\Contracts\OrderCode;
@@ -20,16 +21,29 @@ class Order implements OrderInterface
     private $deliveryAddress;
     private $billingData;
 
+    private $fillable = [];
     private $save;
 
     /**
      * Order constructor.
+     * @param BillingData $billingData
+     * @param DeliveryAddress $deliveryAddress
+     * @param FillableOrderAttributes $fillable
      * @param OrderCode $code
      * @param SaveOrder $save
      */
-    public function __construct(OrderCode $code, SaveOrder $save)
+    public function __construct(
+        BillingData $billingData,
+        DeliveryAddress $deliveryAddress,
+        FillableOrderAttributes $fillable,
+        OrderCode $code,
+        SaveOrder $save
+    )
     {
+        $this->billingData = $billingData;
         $this->code = $code->get();
+        $this->deliveryAddress = $deliveryAddress;
+        $this->fillable = $fillable->get();
         $this->save = $save;
     }
 
@@ -58,14 +72,34 @@ class Order implements OrderInterface
      */
     public function fromArray(array $data): self
     {
-        if (key_exists('id', $data))
-            $this->setId($data['id']);
+        $deliveryAddress = $billingData = [];
+        foreach ($this->fillable as $field) {
+            $key = null;
+            $camelField = Str::camel($field);
+            $snakeField = Str::snake($field);
+            $setter = 'set' . $camelField;
 
-        if (key_exists('customer_id', $data))
-            $this->setCustomerId($data['customer_id']);
+            if (key_exists($field, $data)) {
+                $value = $data[$field];
+            } elseif (key_exists($camelField, $data)) {
+                $value = $data[$camelField];
+            } elseif (key_exists($snakeField, $data)) {
+                $value = $data[$snakeField];
+            } else {
+                continue;
+            }
 
-        if (key_exists('customerId', $data))
-            $this->setCustomerId($data['customerId']);
+            if (method_exists($this, $setter)) {
+                $this->{$setter}($value);
+            } elseif (strpos($snakeField, 'delivery_address_') !== false) {
+                $deliveryAddress[str_replace("delivery_address_", "", $snakeField)] = $value;
+            } elseif (strpos($snakeField, 'billing_') !== false) {
+                $billingData[str_replace("billing_", "", $snakeField)] = $value;
+            }
+        }
+
+        $this->billingData->fromArray($billingData);
+        $this->deliveryAddress->fromArray($deliveryAddress);
 
         return $this;
     }
@@ -85,7 +119,7 @@ class Order implements OrderInterface
      */
     public function toArray(): array
     {
-        $unset = ['save'];
+        $unset = ['save', 'fillable'];
         $object = get_object_vars($this);
 
         $array = [];
@@ -95,7 +129,7 @@ class Order implements OrderInterface
                 unset($object[$key]);
             } elseif (is_object($value) && in_array('toArray', get_class_methods($value))) {
                 $array[Str::snake($key)] = $value->toArray();
-            }else{
+            } else {
                 $array[Str::snake($key)] = $value;
             }
         }

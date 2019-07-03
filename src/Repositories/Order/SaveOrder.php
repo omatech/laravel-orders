@@ -3,13 +3,13 @@
 namespace Omatech\LaravelOrders\Repositories\Order;
 
 use Omatech\LaravelOrders\Contracts\Order;
-use Omatech\LaravelOrders\Repositories\OrderRepository;
 use Omatech\LaravelOrders\Contracts\SaveOrder as SaveOrderInterface;
+use Omatech\LaravelOrders\Repositories\OrderRepository;
 
 class SaveOrder extends OrderRepository implements SaveOrderInterface
 {
 
-    public function save(Order $order)
+    public function save(Order $order): void
     {
         $model = $this->model;
 
@@ -21,7 +21,22 @@ class SaveOrder extends OrderRepository implements SaveOrderInterface
             }
         }
 
-        $model->fill($order->toArray());
+        $data = $order->toArray();
+
+        if (isset($data['delivery_address'])) {
+            foreach ($data['delivery_address'] as $deliveryAddressDatumKey => $deliveryAddressDatumValue){
+                $data['delivery_address_'.$deliveryAddressDatumKey] = $deliveryAddressDatumValue;
+            }
+            unset($data['delivery_address']);
+        }
+        if (isset($data['billing_data'])) {
+            foreach ($data['billing_data'] as $billingDataDatumKey => $billingDataDatumValue){
+                $data['billing_'.$billingDataDatumKey] = $billingDataDatumValue;
+            }
+            unset($data['billing_data']);
+        }
+
+        $model->fill($data);
 
         $model->saveOrFail();
 
