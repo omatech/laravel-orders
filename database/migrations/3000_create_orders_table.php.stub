@@ -18,26 +18,34 @@ class CreateOrdersTable extends Migration
 
             $table->unsignedBigInteger('customer_id');
 
-//            $table->string('status');
-//            $table->string('code')->unique();
+            $table->string('code')->unique();
 
-//            $table->string('customer_name')->nullable();
-//            $table->string('customer_phone')->nullable();
-//            $table->string('customer_email')->nullable();
-//
-//            $table->string('shipping_address_line1')->nullable();
-//            $table->string('shipping_address_line2')->nullable();
-//            $table->string('shipping_city')->nullable();
-//            $table->string('shipping_province')->nullable();
-//            $table->string('shipping_postal_code')->nullable();
-//
-//            $table->string('billing_name')->nullable();
-//            $table->string('billing_cif')->nullable();
-//            $table->string('billing_fiscal_address_line1')->nullable();
-//            $table->string('billing_fiscal_address_line2')->nullable();
-//            $table->string('billing_billing_postal_code')->nullable();
-//            $table->string('billing_billing_city')->nullable();
-//            $table->string('billing_billing_province')->nullable();
+            $table->string('delivery_address_first_name')->nullable();
+            $table->string('delivery_address_last_name')->nullable();
+            $table->string('delivery_address_first_line')->nullable();
+            $table->string('delivery_address_second_line')->nullable();
+            $table->string('delivery_address_postal_code')->nullable();
+            $table->string('delivery_address_city')->nullable();
+            $table->string('delivery_address_region')->nullable();
+            $table->string('delivery_address_country')->nullable();
+            $table->boolean('delivery_address_is_a_company')->default(false);
+            $table->string('delivery_address_company_name')->nullable();
+            $table->string('delivery_address_email')->nullable();
+            $table->string('delivery_address_phone_number')->nullable();
+
+            $table->string('billing_address_first_name')->nullable();
+            $table->string('billing_address_last_name')->nullable();
+            $table->string('billing_address_first_line')->nullable();
+            $table->string('billing_address_second_line')->nullable();
+            $table->string('billing_address_postal_code')->nullable();
+            $table->string('billing_address_city')->nullable();
+            $table->string('billing_address_region')->nullable();
+            $table->string('billing_address_country')->nullable();
+            $table->string('billing_company_name')->nullable();
+            $table->string('billing_cif')->nullable();
+            $table->string('billing_phone_number')->nullable();
+
+//            $table->string('status');
 
             $table->timestamps();
             $table->softDeletes();

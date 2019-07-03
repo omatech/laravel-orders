@@ -3,8 +3,11 @@
 namespace Omatech\LaravelOrders\Objects;
 
 use Illuminate\Support\Str;
+use Omatech\LaravelOrders\Contracts\BillingData;
+use Omatech\LaravelOrders\Contracts\DeliveryAddress;
 use Omatech\LaravelOrders\Contracts\FindOrder;
 use Omatech\LaravelOrders\Contracts\Order as OrderInterface;
+use Omatech\LaravelOrders\Contracts\OrderCode;
 use Omatech\LaravelOrders\Contracts\OrderLine as Line;
 use Omatech\LaravelOrders\Contracts\SaveOrder;
 
@@ -12,16 +15,21 @@ class Order implements OrderInterface
 {
     private $id;
     private $customerId;
+    private $code;
     private $lines = [];
+    private $deliveryAddress;
+    private $billingData;
 
     private $save;
 
     /**
      * Order constructor.
+     * @param OrderCode $code
      * @param SaveOrder $save
      */
-    public function __construct(SaveOrder $save)
+    public function __construct(OrderCode $code, SaveOrder $save)
     {
+        $this->code = $code->get();
         $this->save = $save;
     }
 
@@ -143,5 +151,44 @@ class Order implements OrderInterface
         array_push($this->lines, $line);
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDeliveryAddress(): DeliveryAddress
+    {
+        return $this->deliveryAddress;
+    }
+
+    /**
+     * @param mixed $deliveryAddress
+     */
+    public function setDeliveryAddress(DeliveryAddress $deliveryAddress): void
+    {
+        $this->deliveryAddress = $deliveryAddress;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBillingData(): BillingData
+    {
+        return $this->billingData;
+    }
+
+    /**
+     * @param mixed $billingData
+     */
+    public function setBillingData(BillingData $billingData): void
+    {
+        $this->billingData = $billingData;
+    }
 
 }

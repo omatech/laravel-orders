@@ -137,4 +137,23 @@ class SaveOrderTest extends BaseTestCase
     {
         //TODO
     }
+
+    /** @test **/
+    public function check_order_code_is_saved()
+    {
+        $fakeOrder = app()->make(Order::class);
+        $code = $fakeOrder->getCode();
+
+        $this->assertNotNull($code);
+
+        $data = [
+            'customer_id' => factory(CustomerModel::class)->create()->id
+        ];
+        $fakeOrder->fromArray($data);
+        $fakeOrder->save();
+
+        $this->assertDatabaseHas('orders', [
+            'code' => $code
+        ]);
+    }
 }
