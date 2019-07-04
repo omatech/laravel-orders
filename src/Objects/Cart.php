@@ -6,6 +6,7 @@ use Omatech\LaravelOrders\Contracts\BillingData;
 use Omatech\LaravelOrders\Contracts\Cart as CartInterface;
 use Omatech\LaravelOrders\Contracts\DeliveryAddress;
 use Omatech\LaravelOrders\Contracts\FindCart;
+use Omatech\LaravelOrders\Contracts\Order;
 use Omatech\LaravelOrders\Contracts\Product;
 use Omatech\LaravelOrders\Contracts\SaveCart;
 
@@ -40,12 +41,22 @@ class Cart implements CartInterface
      * @param array $data
      * @return $this
      */
-    public function load(array $data): Cart
+    public function fromArray(array $data): Cart
     {
         if (key_exists('id', $data))
             $this->setId($data['id']);
 
         return $this;
+    }
+
+    /**
+     * @param array $data
+     * @return $this
+     * @deprecated
+     */
+    public function load(array $data): Cart
+    {
+        return $this->fromArray($data);
     }
 
     /**
@@ -176,5 +187,28 @@ class Cart implements CartInterface
     public function getCartLines(): array
     {
         return $this->cartLines;
+    }
+
+    /**
+     * @return Order
+     */
+    public function toOrder(): Order
+    {
+        $data = $this->toArray();
+
+        if (isset($data['deliveryAddress'])) {
+            foreach ($data['deliveryAddress'] as $deliveryAddressDatumKey => $deliveryAddressDatumValue) {
+                $data['delivery_address_' . $deliveryAddressDatumKey] = $deliveryAddressDatumValue;
+            }
+            unset($data['deliveryAddress']);
+        }
+        if (isset($data['billingData'])) {
+            foreach ($data['billingData'] as $billingDataDatumKey => $billingDataDatumValue) {
+                $data['billing_' . $billingDataDatumKey] = $billingDataDatumValue;
+            }
+            unset($data['billingData']);
+        }
+
+        return app(Order::class)->fromArray($data);
     }
 }
