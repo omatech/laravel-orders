@@ -194,7 +194,14 @@ class Cart implements CartInterface
      */
     public function toOrder(): Order
     {
+        $unset = ['id'];
         $data = $this->toArray();
+
+        foreach ($unset as $key) {
+            if (isset($data[$key])) {
+                unset($data[$key]);
+            }
+        }
 
         if (isset($data['deliveryAddress'])) {
             foreach ($data['deliveryAddress'] as $deliveryAddressDatumKey => $deliveryAddressDatumValue) {

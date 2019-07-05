@@ -9,19 +9,24 @@ use Omatech\LaravelOrders\Repositories\OrderRepository;
 class SaveOrder extends OrderRepository implements SaveOrderInterface
 {
 
+    /**
+     * @param Order $order
+     */
     public function save(Order $order): void
     {
         $model = $this->model;
+        $data = $order->toArray();
 
         if (!is_null($order->getId())) {
-            $model = $model->find($order->getId());
+            $model = $model->find($data['id']);
 
             if (is_null($model)) {
-                $model = $this->model->create();
+                unset($data['id']);
+                $model = $this->model->create([
+                    'code' => $order->getCode()
+                ]);
             }
         }
-
-        $data = $order->toArray();
 
         if (isset($data['delivery_address'])) {
             foreach ($data['delivery_address'] as $deliveryAddressDatumKey => $deliveryAddressDatumValue){

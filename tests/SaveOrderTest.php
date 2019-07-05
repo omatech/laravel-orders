@@ -133,9 +133,18 @@ class SaveOrderTest extends BaseTestCase
         ]);
     }
 
-    public function throw_error_if_order_is_saved_without_customer_id()
+    /** @test **/
+    public function order_customer_id_is_optional()
     {
-        //TODO
+        $fakeOrder = app()->make(Order::class);
+        $data = [];
+        $fakeOrder->fromArray($data);
+        $fakeOrder->save();
+
+        $this->assertDatabaseHas('orders', [
+            'id' => $fakeOrder->getId(),
+            'customer_id' => null
+        ]);
     }
 
     /** @test * */
@@ -169,4 +178,26 @@ class SaveOrderTest extends BaseTestCase
         $data['code'] = $fakeOrder->getCode();
         $this->assertDatabaseHas('orders', $data);
     }
+
+    /** @test **/
+    public function create_order_when_order_object_has_an_id_and_not_exists_in_db()
+    {
+        $fakeOrder = app()->make(Order::class);
+        $fakeOrderId = 999;
+        $data = [
+            'customer_id' => factory(CustomerModel::class)->create()->id,
+            'id' => $fakeOrderId
+        ];
+        $fakeOrder->fromArray($data);
+        $fakeOrder->save();
+
+        $this->assertDatabaseMissing('orders', [
+            'id' => $fakeOrderId
+        ]);
+
+        $this->assertDatabaseHas('orders', [
+            'id' => 1
+        ]);
+    }
+
 }
