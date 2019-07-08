@@ -2,11 +2,12 @@
 
 namespace Omatech\LaravelOrders\Objects;
 
+use Omatech\LaravelOrders\Contracts\Customer as CustomerInterface;
 use Omatech\LaravelOrders\Contracts\FindCustomer;
 use Omatech\LaravelOrders\Contracts\Order;
 use Omatech\LaravelOrders\Contracts\SaveCustomer;
 
-class Customer implements \Omatech\LaravelOrders\Contracts\Customer
+class Customer implements CustomerInterface
 {
     private $id;
     private $first_name;
@@ -52,9 +53,9 @@ class Customer implements \Omatech\LaravelOrders\Contracts\Customer
 
     /**
      * @param array $data
-     * @return $this
+     * @return Customer
      */
-    public function load(array $data): self
+    public function fromArray(array $data): self
     {
         if (key_exists('id', $data))
             $this->setId($data['id']);
@@ -80,16 +81,35 @@ class Customer implements \Omatech\LaravelOrders\Contracts\Customer
         return $this;
     }
 
+    /**
+     * @param array $data
+     * @return $this
+     * @deprecated
+     */
+    public function load(array $data): self
+    {
+        return $this->fromArray($data);
+    }
+
+    /**
+     *
+     */
     public function save(): void
     {
         $this->save->save($this);
     }
 
+    /**
+     *
+     */
     public function saveIfNotExists(): void
     {
         $this->save->saveIfNotExists($this);
     }
 
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         $unset = ['save'];
@@ -102,11 +122,17 @@ class Customer implements \Omatech\LaravelOrders\Contracts\Customer
         return $object;
     }
 
+    /**
+     * @param \Omatech\LaravelOrders\Contracts\DeliveryAddress $deliveryAddress
+     */
     public function setDeliveryAddress(\Omatech\LaravelOrders\Contracts\DeliveryAddress $deliveryAddress)
     {
         array_push($this->deliveryAddresses, $deliveryAddress);
     }
 
+    /**
+     * @return array
+     */
     public function getDeliveryAddresses()
     {
         return $this->deliveryAddresses;
