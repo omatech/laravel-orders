@@ -52,7 +52,7 @@ class Cart implements CartInterface
     /**
      * @param array $data
      * @return $this
-     * @deprecated
+     * @deprecated fromArray should be used directly instead. Will be removed in future versions.
      */
     public function load(array $data): Cart
     {
@@ -110,7 +110,7 @@ class Cart implements CartInterface
     /**
      * @return mixed
      */
-    public function getTotalPrice()
+    public function getTotalPrice(): float
     {
         $cartLines = $this->getCartLines();
         $totalPrice = 0;

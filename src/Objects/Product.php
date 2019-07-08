@@ -62,7 +62,7 @@ class Product implements ProductInterface
      * @param array $data
      * @return Product
      */
-    public function load(array $data): Product
+    public function fromArray(array $data): Product
     {
         if (key_exists('id', $data)) {
             $this->setId($data['id']);
@@ -77,6 +77,16 @@ class Product implements ProductInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @param array $data
+     * @return Product
+     * @deprecated fromArray should be used directly instead. Will be removed in future versions.
+     */
+    public function load(array $data): Product
+    {
+        return $this->fromArray($data);
     }
 
     /**

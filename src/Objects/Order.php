@@ -20,6 +20,7 @@ class Order implements OrderInterface
     private $lines = [];
     private $deliveryAddress;
     private $billingData;
+    private $totalPrice;
 
     private $fillable = [];
     private $save;
@@ -223,6 +224,23 @@ class Order implements OrderInterface
     public function setBillingData(BillingData $billingData): void
     {
         $this->billingData = $billingData;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTotalPrice(): float
+    {
+        return $this->totalPrice;
+    }
+
+    /**
+     * @param float $totalPrice
+     * @return mixed
+     */
+    public function setTotalPrice(float $totalPrice)
+    {
+        $this->totalPrice = $totalPrice;
     }
 
 }

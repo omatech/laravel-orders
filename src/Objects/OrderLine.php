@@ -9,6 +9,8 @@ class OrderLine implements OrderLineInterface
 {
     private $id;
     private $quantity;
+    private $totalPrice;
+    private $unitPrice;
 
     /**
      * @param array $data
@@ -40,7 +42,7 @@ class OrderLine implements OrderLineInterface
                 unset($object[$key]);
             } elseif (is_object($value) && in_array('toArray', get_class_methods($value))) {
                 $array[Str::snake($key)] = $value->toArray();
-            }else{
+            } else {
                 $array[Str::snake($key)] = $value;
             }
         }
@@ -80,5 +82,36 @@ class OrderLine implements OrderLineInterface
         $this->quantity = $quantity;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getTotalPrice(): float
+    {
+        return $this->totalPrice;
+    }
 
+    /**
+     * @param float $totalPrice
+     * @return mixed
+     */
+    public function setTotalPrice(float $totalPrice)
+    {
+        $this->totalPrice = $totalPrice;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUnitPrice()
+    {
+        return $this->unitPrice;
+    }
+
+    /**
+     * @param mixed $unitPrice
+     */
+    public function setUnitPrice(float $unitPrice): void
+    {
+        $this->unitPrice = $unitPrice;
+    }
 }
