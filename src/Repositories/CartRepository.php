@@ -12,6 +12,6 @@ class CartRepository extends BaseRepository
      */
     public function model()
     {
-        return Cart::class;
+        return config('laravel-orders.options.carts.model') ? : Cart::class;
     }
 }

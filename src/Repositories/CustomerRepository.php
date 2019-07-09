@@ -12,6 +12,6 @@ class CustomerRepository extends BaseRepository
      */
     public function model()
     {
-        return Customer::class;
+        return  config('laravel-orders.options.customers.model') ? : Customer::class;
     }
 }

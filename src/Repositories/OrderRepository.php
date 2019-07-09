@@ -12,6 +12,6 @@ class OrderRepository extends BaseRepository
      */
     public function model()
     {
-        return Order::class;
+        return config('laravel-orders.options.orders.model') ? :  Order::class;
     }
 }
