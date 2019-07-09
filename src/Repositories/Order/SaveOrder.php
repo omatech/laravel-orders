@@ -55,7 +55,12 @@ class SaveOrder extends OrderRepository implements SaveOrderInterface
                 $model->orderLines()->create([
                     'quantity' => $currentLineQuantity,
                     'order_id' => $order->getId(),
-                ], $orderLine->toArray());
+                ], [
+                    'id' => $orderLine->getId(),
+                    'quantity' => $orderLine->getQuantity(),
+                    'unit_price' => $orderLine->getUnitPrice(),
+                    'total_price' => $orderLine->getTotalPrice()
+                ]);
 
             }
         }

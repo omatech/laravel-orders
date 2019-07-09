@@ -4,6 +4,7 @@ namespace Omatech\LaravelOrders\Objects;
 
 use Illuminate\Support\Str;
 use Omatech\LaravelOrders\Contracts\OrderLine as OrderLineInterface;
+use Omatech\LaravelOrders\Contracts\Product;
 
 class OrderLine implements OrderLineInterface
 {
@@ -11,6 +12,12 @@ class OrderLine implements OrderLineInterface
     private $quantity;
     private $totalPrice;
     private $unitPrice;
+    private $product;
+
+    public function __construct(Product $product)
+    {
+        $this->product = $product;
+    }
 
     /**
      * @param array $data
@@ -23,6 +30,12 @@ class OrderLine implements OrderLineInterface
 
         if (key_exists('quantity', $data))
             $this->setQuantity($data['quantity']);
+
+        if (key_exists('unit_price', $data))
+            $this->setUnitPrice($data['unit_price']);
+
+        if (key_exists('total_price', $data))
+            $this->setTotalPrice($data['total_price']);
 
         return $this;
     }
@@ -85,7 +98,7 @@ class OrderLine implements OrderLineInterface
     /**
      * @return mixed
      */
-    public function getTotalPrice(): float
+    public function getTotalPrice(): ?float
     {
         return $this->totalPrice;
     }
@@ -113,5 +126,16 @@ class OrderLine implements OrderLineInterface
     public function setUnitPrice(float $unitPrice): void
     {
         $this->unitPrice = $unitPrice;
+    }
+
+    /**
+     * @return Product
+     */
+    public function getProduct(): Product
+    {
+        return app(Product::class)->fromArray([
+            'requestedQuantity' => $this->quantity,
+            'unitPrice' => $this->unitPrice
+        ]);
     }
 }

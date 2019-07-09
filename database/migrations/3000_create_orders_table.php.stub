@@ -60,13 +60,13 @@ class CreateOrdersTable extends Migration
 
             $table->integer('quantity')->default(1);
 //
-//            $table->decimal('unit_price');
+            $table->decimal('unit_price')->nullable();
 //            $table->decimal('total_base_price');
 //            $table->decimal('shipping_price')->default(0.00);
 //            $table->decimal('tax_decimal')->default(0.00);
 //            $table->decimal('tax_amount')->default(0.00);
 //            $table->decimal('total_price_without_taxes');
-//            $table->decimal('total_price');
+            $table->decimal('total_price')->nullable();
 //            $table->string('currency_code');
 
             $table->timestamps();
