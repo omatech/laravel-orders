@@ -19,7 +19,10 @@ class SaveProduct extends ProductRepository implements \Omatech\LaravelOrders\Co
             $model = $model->find($product->getId());
         }
 
-        $model->fill($product->toArray());
+        $model->fill([
+            'id' => $product->getId(),
+            'unit_price' => $product->getUnitPrice()
+        ]);
 
         $model->saveOrFail();
 

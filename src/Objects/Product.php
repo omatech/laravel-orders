@@ -72,8 +72,16 @@ class Product implements ProductInterface
             $this->setRequestedQuantity($data['requestedQuantity']);
         }
 
+        if (key_exists('requested_quantity', $data)) {
+            $this->setRequestedQuantity($data['requested_quantity']);
+        }
+
         if (key_exists('unitPrice', $data)) {
             $this->setUnitPrice($data['unitPrice']);
+        }
+
+        if (key_exists('unit_price', $data)) {
+            $this->setUnitPrice($data['unit_price']);
         }
 
         return $this;

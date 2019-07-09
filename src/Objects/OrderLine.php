@@ -14,11 +14,6 @@ class OrderLine implements OrderLineInterface
     private $unitPrice;
     private $product;
 
-    public function __construct(Product $product)
-    {
-        $this->product = $product;
-    }
-
     /**
      * @param array $data
      * @return OrderLine
@@ -107,7 +102,7 @@ class OrderLine implements OrderLineInterface
      * @param float $totalPrice
      * @return mixed
      */
-    public function setTotalPrice(float $totalPrice)
+    public function setTotalPrice(float $totalPrice = null)
     {
         $this->totalPrice = $totalPrice;
     }
@@ -123,7 +118,7 @@ class OrderLine implements OrderLineInterface
     /**
      * @param mixed $unitPrice
      */
-    public function setUnitPrice(float $unitPrice): void
+    public function setUnitPrice(float $unitPrice = null): void
     {
         $this->unitPrice = $unitPrice;
     }
@@ -133,9 +128,11 @@ class OrderLine implements OrderLineInterface
      */
     public function getProduct(): Product
     {
-        return app(Product::class)->fromArray([
+        $this->product = app(Product::class)->fromArray([
             'requestedQuantity' => $this->quantity,
             'unitPrice' => $this->unitPrice
         ]);
+
+        return $this->product;
     }
 }

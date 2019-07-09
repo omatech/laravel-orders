@@ -147,6 +147,12 @@ class Cart implements CartInterface
                 unset($object[$key]);
             } elseif (is_object($value) && in_array('toArray', get_class_methods($value))) {
                 $object[$key] = $value->toArray();
+            } elseif ($key === 'cartLines' && is_array($value)) {
+                foreach ($value as $lineKey => $lineValue) {
+                    if (is_object($lineValue) && in_array('toArray', get_class_methods($lineValue))) {
+                        $object[$key][$lineKey] = $lineValue->toArray();
+                    }
+                }
             }
         }
 
@@ -214,6 +220,22 @@ class Cart implements CartInterface
                 $data['billing_' . $billingDataDatumKey] = $billingDataDatumValue;
             }
             unset($data['billingData']);
+        }
+
+        if (isset($data['cartLines']) && is_array($data['cartLines'])) {
+            $data['lines'] = $data['cartLines'];
+            unset($data['cartLines']);
+
+            foreach ($data['lines'] as &$line) {
+
+                if (!empty($line['product_id'])) {
+                    $currentLineProduct = app(Product::class)->find($line['product_id']);
+                    $line = array_merge($line, [
+                        'total_price' => $currentLineProduct->getUnitPrice() * $line['quantity'],
+                        'unit_price' => $currentLineProduct->getUnitPrice(),
+                    ]);
+                }
+            }
         }
 
         return app(Order::class)->fromArray($data);

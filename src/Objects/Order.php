@@ -10,6 +10,7 @@ use Omatech\LaravelOrders\Contracts\FindOrder;
 use Omatech\LaravelOrders\Contracts\Order as OrderInterface;
 use Omatech\LaravelOrders\Contracts\OrderCode;
 use Omatech\LaravelOrders\Contracts\OrderLine as Line;
+use Omatech\LaravelOrders\Contracts\OrderLine;
 use Omatech\LaravelOrders\Contracts\SaveOrder;
 
 class Order implements OrderInterface
@@ -101,6 +102,12 @@ class Order implements OrderInterface
 
         $this->billingData->fromArray($billingData);
         $this->deliveryAddress->fromArray($deliveryAddress);
+
+        if (isset($data['lines']) && is_array($data['lines'])) {
+            foreach ($data['lines'] as $line){
+                $this->pushLine(app(OrderLine::class)->fromArray($line));
+            }
+        }
 
         return $this;
     }

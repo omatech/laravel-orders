@@ -168,10 +168,18 @@ class CartLine implements \Omatech\LaravelOrders\Contracts\CartLine
     }
 
     /**
-     *
+     * @return mixed
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-//    public function save(): void
-//    {
-//        $this->save->save($this);
-//    }
+    public function toOrderLine(): \Omatech\LaravelOrders\Contracts\OrderLine
+    {
+        $product = $this->getProduct();
+
+        return app(\Omatech\LaravelOrders\Contracts\OrderLine::class)->fromArray([
+            'quantity' => $this->quantity,
+            'total_price' => $this->getTotalPrice(),
+            'unit_price' => $product->getUnitPrice(),
+            'product' => $product,
+        ]);
+    }
 }

@@ -58,4 +58,29 @@ class CartObjectTest extends BaseTestCase
         $this->assertEquals($order->getDeliveryAddress(), $cart->getDeliveryAddress());
         $this->assertEquals($order->getBillingData(), $cart->getBillingData());
     }
+
+    /** @test * */
+    public function transform_cart_with_lines_to_order_with_lines()
+    {
+        $cart = app()->make(Cart::class);
+        $data = factory(\Omatech\LaravelOrders\Models\Cart::class)->make()->toArray();
+        $cart->fromArray($data);
+
+        $product = app()->make(Product::class);
+        $product->setRequestedQuantity(4);
+        $product->setUnitPrice(1.99);
+        $product->save();
+
+        $cart->push($product);
+
+        $cart->save();
+
+        $order = $cart->toOrder();
+        $lines = $order->getLines();
+
+        $this->assertEquals(1, count($lines));
+        $this->assertEquals(4, $lines[0]->getQuantity());
+        $this->assertEquals(1.99, $lines[0]->getUnitPrice());
+        $this->assertEquals(4*1.99, $lines[0]->getTotalPrice());
+    }
 }
