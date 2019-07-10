@@ -15,6 +15,15 @@ class OrderLine implements OrderLineInterface
     private $product;
 
     /**
+     * OrderLine constructor.
+     * @param Product $product
+     */
+    public function __construct(Product $product)
+    {
+        $this->product = $product;
+    }
+
+    /**
      * @param array $data
      * @return OrderLine
      */
@@ -31,6 +40,10 @@ class OrderLine implements OrderLineInterface
 
         if (key_exists('total_price', $data))
             $this->setTotalPrice($data['total_price']);
+
+        if (key_exists('product', $data)) {
+            $this->setProduct(app(Product::class)->fromArray($data['product']));
+        }
 
         return $this;
     }
@@ -134,5 +147,10 @@ class OrderLine implements OrderLineInterface
         ]);
 
         return $this->product;
+    }
+
+    public function setProduct(Product $product): void
+    {
+        $this->product = $product;
     }
 }

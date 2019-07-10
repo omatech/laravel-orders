@@ -12,6 +12,7 @@ class Product implements ProductInterface
     private $id;
     private $requestedQuantity = 0;
     private $unitPrice;
+    private $name;
 
     private $save;
 
@@ -56,6 +57,22 @@ class Product implements ProductInterface
     public function setRequestedQuantity(int $requestedQuantity): void
     {
         $this->requestedQuantity = $requestedQuantity;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName($name): void
+    {
+        $this->name = $name;
     }
 
     /**

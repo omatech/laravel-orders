@@ -241,9 +241,11 @@ class Cart implements CartInterface
 
                 if (!empty($line['product_id'])) {
                     $currentLineProduct = app(Product::class)->find($line['product_id']);
+                    $currentLineProduct->setRequestedQuantity($line['quantity']);
                     $line = array_merge($line, [
                         'total_price' => $currentLineProduct->getUnitPrice() * $line['quantity'],
                         'unit_price' => $currentLineProduct->getUnitPrice(),
+                        'product' => $currentLineProduct->toArray()
                     ]);
                 }
             }
