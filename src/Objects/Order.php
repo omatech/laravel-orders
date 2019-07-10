@@ -6,11 +6,12 @@ use Illuminate\Support\Str;
 use Omatech\LaravelOrders\Contracts\BillingData;
 use Omatech\LaravelOrders\Contracts\DeliveryAddress;
 use Omatech\LaravelOrders\Contracts\FillableOrderAttributes;
+use Omatech\LaravelOrders\Contracts\FindAllOrders;
 use Omatech\LaravelOrders\Contracts\FindOrder;
 use Omatech\LaravelOrders\Contracts\Order as OrderInterface;
 use Omatech\LaravelOrders\Contracts\OrderCode;
-use Omatech\LaravelOrders\Contracts\OrderLine as Line;
 use Omatech\LaravelOrders\Contracts\OrderLine;
+use Omatech\LaravelOrders\Contracts\OrderLine as Line;
 use Omatech\LaravelOrders\Contracts\SaveOrder;
 
 class Order implements OrderInterface
@@ -69,17 +70,33 @@ class Order implements OrderInterface
     }
 
     /**
+     * @return array
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    static public function findAll(): array
+    {
+        $find = app()->make(FindAllOrders::class);
+        return $find->make();
+    }
+
+    /**
      * @param array $data
      * @return Order
      */
     public function fromArray(array $data): self
     {
+        $notSettableFromArray = ['code'];
+
         $deliveryAddress = $billingData = [];
         foreach ($this->fillable as $field) {
             $key = null;
             $camelField = Str::camel($field);
             $snakeField = Str::snake($field);
             $setter = 'set' . $camelField;
+
+            if(in_array($snakeField, $notSettableFromArray)){
+                continue;
+            }
 
             if (key_exists($field, $data)) {
                 $value = $data[$field];
@@ -104,7 +121,7 @@ class Order implements OrderInterface
         $this->deliveryAddress->fromArray($deliveryAddress);
 
         if (isset($data['lines']) && is_array($data['lines'])) {
-            foreach ($data['lines'] as $line){
+            foreach ($data['lines'] as $line) {
                 $this->pushLine(app(OrderLine::class)->fromArray($line));
             }
         }
@@ -199,6 +216,14 @@ class Order implements OrderInterface
     public function getCode()
     {
         return $this->code;
+    }
+
+    /**
+     * @param OrderCode $code
+     */
+    public function setCode(OrderCode $code): void
+    {
+        $this->code = $code->get();
     }
 
     /**

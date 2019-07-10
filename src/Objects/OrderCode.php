@@ -11,10 +11,15 @@ class OrderCode implements OrderCodeInterface
 
     /**
      * OrderCode constructor.
+     * @param null $code
      */
-    public function __construct()
+    public function __construct($code = null)
     {
-        $this->code = Str::random(5) . time();
+        if (is_null($code) || !$this->validate($code)) {
+            $code = $this->generate();
+        }
+
+        $this->code = $code;
     }
 
     /**
@@ -23,5 +28,22 @@ class OrderCode implements OrderCodeInterface
     public function get(): string
     {
         return $this->code;
+    }
+
+    /**
+     * @param $code
+     * @return bool
+     */
+    private function validate($code): bool
+    {
+        return true;
+    }
+
+    /**
+     * @return string
+     */
+    private function generate(): string
+    {
+        return Str::random(5) . time();
     }
 }
