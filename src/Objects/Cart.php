@@ -5,6 +5,7 @@ namespace Omatech\LaravelOrders\Objects;
 use Omatech\LaravelOrders\Contracts\BillingData;
 use Omatech\LaravelOrders\Contracts\Cart as CartInterface;
 use Omatech\LaravelOrders\Contracts\DeliveryAddress;
+use Omatech\LaravelOrders\Contracts\FindAllCarts;
 use Omatech\LaravelOrders\Contracts\FindCart;
 use Omatech\LaravelOrders\Contracts\Order;
 use Omatech\LaravelOrders\Contracts\Product;
@@ -35,6 +36,16 @@ class Cart implements CartInterface
     {
         $find = app()->make(FindCart::class);
         return $find->make($id);
+    }
+
+    /**
+     * @return array
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    static public function findAll(): array
+    {
+        $find = app()->make(FindAllCarts::class);
+        return $find->make();
     }
 
     /**
