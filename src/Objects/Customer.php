@@ -3,6 +3,7 @@
 namespace Omatech\LaravelOrders\Objects;
 
 use Omatech\LaravelOrders\Contracts\Customer as CustomerInterface;
+use Omatech\LaravelOrders\Contracts\FindAllCustomers;
 use Omatech\LaravelOrders\Contracts\FindCustomer;
 use Omatech\LaravelOrders\Contracts\Order;
 use Omatech\LaravelOrders\Contracts\SaveCustomer;
@@ -49,6 +50,16 @@ class Customer implements CustomerInterface
     {
         $find = app()->make(FindCustomer::class);
         return $find->make($userId, 'user_id');
+    }
+
+    /**
+     * @return array
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public static function findAll(): array
+    {
+        $find = app()->make(FindAllCustomers::class);
+        return $find->make();
     }
 
     /**
