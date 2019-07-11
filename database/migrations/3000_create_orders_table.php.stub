@@ -20,6 +20,8 @@ class CreateOrdersTable extends Migration
 
             $table->string('code')->unique();
 
+            $table->decimal('total_price')->nullable();
+
             $table->string('delivery_address_first_name')->nullable();
             $table->string('delivery_address_last_name')->nullable();
             $table->string('delivery_address_first_line')->nullable();

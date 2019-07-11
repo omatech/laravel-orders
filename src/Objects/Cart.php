@@ -213,6 +213,7 @@ class Cart implements CartInterface
     {
         $unset = ['id'];
         $data = $this->toArray();
+        $orderTotalPrice = 0;
 
         foreach ($unset as $key) {
             if (isset($data[$key])) {
@@ -238,18 +239,24 @@ class Cart implements CartInterface
             unset($data['cartLines']);
 
             foreach ($data['lines'] as &$line) {
-
+                $lineTotalPrice = 0;
                 if (!empty($line['product_id'])) {
+
                     $currentLineProduct = app(Product::class)->find($line['product_id']);
                     $currentLineProduct->setRequestedQuantity($line['quantity']);
+                    $lineTotalPrice = $currentLineProduct->getUnitPrice() * $line['quantity'];
+                    $orderTotalPrice += $lineTotalPrice;
+
                     $line = array_merge($line, [
-                        'total_price' => $currentLineProduct->getUnitPrice() * $line['quantity'],
+                        'total_price' => $lineTotalPrice,
                         'unit_price' => $currentLineProduct->getUnitPrice(),
                         'product' => $currentLineProduct->toArray()
                     ]);
                 }
             }
         }
+
+        $data['totalPrice'] = $orderTotalPrice;
 
         return app(Order::class)->fromArray($data);
     }

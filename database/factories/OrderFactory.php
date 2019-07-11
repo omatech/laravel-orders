@@ -11,6 +11,8 @@ $factory->define(\Omatech\LaravelOrders\Models\Order::class, function (Faker $fa
 
         'code' => $faker->randomNumber(8),
 
+        'total_price' => $faker->randomFloat(2),
+
         'delivery_address_first_name' => $faker->firstName,
         'delivery_address_last_name' => $faker->lastName,
         'delivery_address_first_line' => $faker->streetAddress,

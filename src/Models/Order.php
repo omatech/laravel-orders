@@ -15,6 +15,7 @@ class Order extends Model
         'id',
         'customer_id',
         'code',
+        'total_price',
         'delivery_address_first_name',
         'delivery_address_last_name',
         'delivery_address_first_line',

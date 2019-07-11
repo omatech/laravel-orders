@@ -83,4 +83,29 @@ class CartObjectTest extends BaseTestCase
         $this->assertEquals(1.99, $lines[0]->getUnitPrice());
         $this->assertEquals(4*1.99, $lines[0]->getTotalPrice());
     }
+
+    /** @test **/
+    public function transform_cart_to_order_with_total_price()
+    {
+        $cart = app()->make(Cart::class);
+        $data = factory(\Omatech\LaravelOrders\Models\Cart::class)->make()->toArray();
+        $cart->fromArray($data);
+
+        $product = app()->make(Product::class);
+        $product->setRequestedQuantity(4);
+        $product->setUnitPrice(1.99);
+        $product->save();
+
+        $cart->push($product);
+
+        $cart->save();
+
+        $order = $cart->toOrder();
+
+        $orderTotalPrice = $order->getTotalPrice();
+
+        $this->assertFalse(is_null($orderTotalPrice));
+        $this->assertTrue(is_float($orderTotalPrice));
+        $this->assertEquals(4*1.99, $orderTotalPrice);
+    }
 }
