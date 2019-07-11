@@ -69,4 +69,15 @@ class FindOrderTest extends BaseTestCase
         $this->assertTrue(is_a($billingData, BillingData::class));
     }
 
+    /** @test **/
+    public function check_creation_date()
+    {
+        $order = factory(OrderModel::class)->create();
+        $orderId = $order->id;
+
+        $findOrder = app()->make(OrderInterface::class)::find($orderId);
+
+        $this->assertEquals($order->created_at, $findOrder->getCreationDate());
+    }
+
 }

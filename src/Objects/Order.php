@@ -23,6 +23,7 @@ class Order implements OrderInterface
     private $deliveryAddress;
     private $billingData;
     private $totalPrice;
+    private $creationDate;
 
     private $fillable = [];
     private $save;
@@ -124,6 +125,11 @@ class Order implements OrderInterface
             foreach ($data['lines'] as $line) {
                 $this->pushLine(app(OrderLine::class)->fromArray($line));
             }
+        }
+
+        if(isset($data['created_at'])){
+            $createdAtDateTime = \DateTime::createFromFormat('Y-m-d H:i:s', $data['created_at']);
+            $this->setCreationDate($createdAtDateTime);
         }
 
         return $this;
@@ -273,6 +279,22 @@ class Order implements OrderInterface
     public function setTotalPrice(float $totalPrice)
     {
         $this->totalPrice = $totalPrice;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCreationDate(): \DateTime
+    {
+        return $this->creationDate;
+    }
+
+    /**
+     * @param \DateTime $date
+     */
+    public function setCreationDate(\DateTime $date)
+    {
+        $this->creationDate = $date;
     }
 
 }
