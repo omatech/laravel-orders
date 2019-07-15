@@ -80,4 +80,15 @@ class FindOrderTest extends BaseTestCase
         $this->assertEquals($order->created_at, $findOrder->getCreationDate());
     }
 
+    /** @test **/
+    public function check_if_code_is_the_same()
+    {
+        $order = factory(OrderModel::class)->create();
+        $orderId = $order->id;
+
+        $findOrder = app()->make(OrderInterface::class)::find($orderId);
+
+        $this->assertEquals($order->code, $findOrder->getCode());
+    }
+
 }

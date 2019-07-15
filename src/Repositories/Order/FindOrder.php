@@ -5,6 +5,7 @@ namespace Omatech\LaravelOrders\Repositories\Order;
 use Omatech\LaravelOrders\Contracts\BillingData;
 use Omatech\LaravelOrders\Contracts\DeliveryAddress;
 use Omatech\LaravelOrders\Contracts\Order;
+use Omatech\LaravelOrders\Contracts\OrderCode;
 use Omatech\LaravelOrders\Contracts\OrderLine;
 use Omatech\LaravelOrders\Repositories\OrderRepository;
 
@@ -104,6 +105,10 @@ class FindOrder extends OrderRepository
         $this->order->fromArray($order->toArray());
         $this->order->setDeliveryAddress($deliveryAddress);
         $this->order->setBillingData($billingData);
+
+        //Set Code
+        $code = app(OrderCode::class, ['code' => $order->code]);
+        $this->order->setCode($code);
 
         return $this->order;
     }

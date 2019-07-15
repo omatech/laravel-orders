@@ -95,7 +95,7 @@ class Order implements OrderInterface
             $snakeField = Str::snake($field);
             $setter = 'set' . $camelField;
 
-            if(in_array($snakeField, $notSettableFromArray)){
+            if (in_array($snakeField, $notSettableFromArray)) {
                 continue;
             }
 
@@ -127,7 +127,7 @@ class Order implements OrderInterface
             }
         }
 
-        if(isset($data['created_at'])){
+        if (isset($data['created_at'])) {
             $createdAtDateTime = \DateTime::createFromFormat('Y-m-d H:i:s', $data['created_at']);
             $this->setCreationDate($createdAtDateTime);
         }
