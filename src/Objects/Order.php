@@ -64,7 +64,7 @@ class Order implements OrderInterface
      * @return null|Order
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    static public function find(int $id): ?self
+    public static function find(int $id): ?self
     {
         $find = app()->make(FindOrder::class);
         return $find->make($id);
