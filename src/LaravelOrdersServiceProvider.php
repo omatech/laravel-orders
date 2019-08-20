@@ -3,6 +3,7 @@
 namespace Omatech\LaravelOrders;
 
 use Illuminate\Support\ServiceProvider;
+use Omatech\LaravelOrders\Api\Order as OrderApi;
 use Omatech\LaravelOrders\Contracts\BillingData as BillingDataInterface;
 use Omatech\LaravelOrders\Contracts\Cart as CartInterface;
 use Omatech\LaravelOrders\Contracts\CartLine as CartLineInterface;
@@ -108,5 +109,9 @@ class LaravelOrdersServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/orders.php', 'laravel-orders');
+
+        $this->app->singleton('order', function () {
+            return new OrderApi;
+        });
     }
 }

@@ -47,7 +47,10 @@
         "laravel": {
             "providers": [
                 "Omatech\\LaravelOrders\\LaravelOrdersServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "Order": "Omatech\\LaravelOrders\\Facades\\Order"
+            }
         }
     }
 }

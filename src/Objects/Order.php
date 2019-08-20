@@ -267,7 +267,7 @@ class Order implements OrderInterface
     /**
      * @return mixed
      */
-    public function getTotalPrice(): float
+    public function getTotalPrice(): ?float
     {
         return $this->totalPrice;
     }
@@ -276,7 +276,7 @@ class Order implements OrderInterface
      * @param float $totalPrice
      * @return mixed
      */
-    public function setTotalPrice(float $totalPrice)
+    public function setTotalPrice(float $totalPrice = null)
     {
         $this->totalPrice = $totalPrice;
     }

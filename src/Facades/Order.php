@@ -1,13 +1,10 @@
 <?php
 
-namespace Omatech\LaravelOrders;
+namespace Omatech\LaravelOrders\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-/**
- * @see \Omatech\LaravelOrders\Skeleton\SkeletonClass
- */
-class LaravelOrdersFacade extends Facade
+class Order extends Facade
 {
     /**
      * Get the registered name of the component.
