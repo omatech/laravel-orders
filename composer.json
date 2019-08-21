@@ -49,7 +49,8 @@
                 "Omatech\\LaravelOrders\\LaravelOrdersServiceProvider"
             ],
             "aliases": {
-                "Order": "Omatech\\LaravelOrders\\Facades\\Order"
+                "Order": "Omatech\\LaravelOrders\\Facades\\Order",
+                "Cart": "Omatech\\LaravelOrders\\Facades\\Cart"
             }
         }
     }

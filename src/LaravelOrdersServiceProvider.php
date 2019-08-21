@@ -4,6 +4,7 @@ namespace Omatech\LaravelOrders;
 
 use Illuminate\Support\ServiceProvider;
 use Omatech\LaravelOrders\Api\Order as OrderApi;
+use Omatech\LaravelOrders\Api\Cart as CartApi;
 use Omatech\LaravelOrders\Contracts\BillingData as BillingDataInterface;
 use Omatech\LaravelOrders\Contracts\Cart as CartInterface;
 use Omatech\LaravelOrders\Contracts\CartLine as CartLineInterface;
@@ -112,6 +113,10 @@ class LaravelOrdersServiceProvider extends ServiceProvider
 
         $this->app->singleton('order', function () {
             return new OrderApi;
+        });
+
+        $this->app->singleton('cart', function () {
+            return new CartApi;
         });
     }
 }

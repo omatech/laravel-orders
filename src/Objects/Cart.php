@@ -2,6 +2,7 @@
 
 namespace Omatech\LaravelOrders\Objects;
 
+use Illuminate\Support\Str;
 use Omatech\LaravelOrders\Contracts\BillingData;
 use Omatech\LaravelOrders\Contracts\Cart as CartInterface;
 use Omatech\LaravelOrders\Contracts\DeliveryAddress;
@@ -51,11 +52,76 @@ class Cart implements CartInterface
     /**
      * @param array $data
      * @return $this
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function fromArray(array $data): Cart
     {
-        if (key_exists('id', $data))
-            $this->setId($data['id']);
+//        if (key_exists('id', $data))
+//            $this->setId($data['id']);
+
+        $notSettableFromArray = [];
+        $fillable = [
+            'id',
+            'delivery_address_first_name',
+            'delivery_address_last_name',
+            'delivery_address_first_line',
+            'delivery_address_second_line',
+            'delivery_address_postal_code',
+            'delivery_address_city',
+            'delivery_address_region',
+            'delivery_address_country',
+            'delivery_address_is_a_company',
+            'delivery_address_company_name',
+            'delivery_address_email',
+            'delivery_address_phone_number',
+            'billing_address_first_name',
+            'billing_address_last_name',
+            'billing_address_first_line',
+            'billing_address_second_line',
+            'billing_address_postal_code',
+            'billing_address_city',
+            'billing_address_region',
+            'billing_address_country',
+            'billing_company_name',
+            'billing_cif',
+            'billing_phone_number',
+        ];
+
+        $deliveryAddress = $billingData = [];
+        foreach ($fillable as $field) {
+            $key = null;
+            $camelField = Str::camel($field);
+            $snakeField = Str::snake($field);
+            $setter = 'set' . $camelField;
+
+            if (in_array($snakeField, $notSettableFromArray)) {
+                continue;
+            }
+
+            if (key_exists($field, $data)) {
+                $value = $data[$field];
+            } elseif (key_exists($camelField, $data)) {
+                $value = $data[$camelField];
+            } elseif (key_exists($snakeField, $data)) {
+                $value = $data[$snakeField];
+            } else {
+                continue;
+            }
+
+            if (method_exists($this, $setter)) {
+                $this->{$setter}($value);
+            } elseif (strpos($snakeField, 'delivery_address_') !== false) {
+                $deliveryAddress[str_replace("delivery_address_", "", $snakeField)] = $value;
+            } elseif (strpos($snakeField, 'billing_') !== false) {
+                $billingData[str_replace("billing_", "", $snakeField)] = $value;
+            }
+        }
+
+        if ($billingData)
+            $this->setBillingData(app()->make(BillingData::class)->fromArray($billingData));
+
+        if ($deliveryAddress)
+            $this->setDeliveryAddress(app()->make(DeliveryAddress::class)->fromArray($deliveryAddress));
 
         return $this;
     }
