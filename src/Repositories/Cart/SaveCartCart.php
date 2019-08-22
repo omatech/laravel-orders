@@ -31,9 +31,9 @@ class SaveCartCart extends CartRepository implements SaveCart //TODO canviar el 
         if (!is_null($deliveryAddress) && is_array($deliveryAddress)) {
             unset($cartToArray['deliveryAddress']);
             foreach ($deliveryAddress as $deliveryAddressField => $deliveryAddressValue) {
-                if (!is_null($deliveryAddressValue)) {
+//                if (!is_null($deliveryAddressValue)) {
                     $cartToArray['delivery_address_' . $deliveryAddressField] = $deliveryAddressValue;
-                }
+//                }
             }
         }
 

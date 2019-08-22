@@ -9,8 +9,14 @@ class UpdateCartApiTest extends BaseTestCase
     /** @test * */
     public function update_a_cart_in_database()
     {
-        $data = factory(\Omatech\LaravelOrders\Models\Cart::class)->create()->toArray();
-        $dataToUpdate = factory(\Omatech\LaravelOrders\Models\Cart::class)->make()->toArray();
+        $data = factory(\Omatech\LaravelOrders\Models\Cart::class)->create([
+            'delivery_address_is_a_company' => true,
+            'delivery_address_company_name' => 'Test Company'
+        ])->toArray();
+        $dataToUpdate = factory(\Omatech\LaravelOrders\Models\Cart::class)->make([
+            'delivery_address_is_a_company' => false,
+            'delivery_address_company_name' => null,
+        ])->toArray();
         $updated = app()->make(Cart::class)->update($data['id'], $dataToUpdate);
 
         $this->assertTrue($updated);
@@ -74,8 +80,6 @@ class UpdateCartApiTest extends BaseTestCase
     /** @test * */
     public function update_a_nonexistent_cart_in_database()
     {
-//        $this->expectException(CartNotFoundException::class);
-
         $data = factory(\Omatech\LaravelOrders\Models\Cart::class)->make()->toArray();
         $updated = app()->make(Cart::class)->update(9999, $data);
 

@@ -36,4 +36,25 @@ class Order
 
         return $order;
     }
+
+    /**
+     * @param int $id
+     * @param array $data
+     * @return bool
+     */
+    public function update(int $id, array $data): bool
+    {
+        $order = $this->order::find($id);
+
+        if (is_null($order)) {
+            return false;
+        }
+
+        if (isset($data['id'])) unset($data['id']);
+
+        $order->fromArray($data);
+        $order->save();
+
+        return true;
+    }
 }
