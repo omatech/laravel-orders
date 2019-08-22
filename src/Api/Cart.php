@@ -2,6 +2,8 @@
 
 namespace Omatech\LaravelOrders\Api;
 
+use Omatech\LaravelOrders\Exceptions\Cart\CartNotFoundException;
+
 class Cart
 {
     /**
@@ -28,11 +30,32 @@ class Cart
             $cart = $this->cart->fromArray($data);
             $cart->save();
             $cart = $this->cart::find($cart->getId());
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             $cart = false;
-        }catch (\TypeError $error){
+        } catch (\TypeError $error) {
             $cart = false;
         }
         return $cart;
+    }
+
+    /**
+     * @param int $id
+     * @param array $data
+     * @return bool
+     */
+    public function update(int $id, array $data): bool
+    {
+        $cart = $this->cart::find($id);
+
+        if (is_null($cart)) {
+            return false;
+        }
+
+        if (isset($data['id'])) unset($data['id']);
+
+        $cart->fromArray($data);
+        $cart->save();
+
+        return true;
     }
 }
