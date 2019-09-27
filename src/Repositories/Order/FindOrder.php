@@ -91,11 +91,13 @@ class FindOrder extends OrderRepository
         $orderLines = $order->orderLines()->get();
 
         foreach ($orderLines as $orderLine) {
+            
             $currentOrderLine = $this->orderLine->fromArray([
                 'id' => $orderLine->id,
                 'quantity' => $orderLine->quantity,
                 'unit_price' => $orderLine->unit_price,
-                'total_price' => $orderLine->total_price
+                'total_price' => $orderLine->total_price, 
+                'product_id' => $orderLine->product_id
             ]);
 
             $this->order->pushLine($currentOrderLine);

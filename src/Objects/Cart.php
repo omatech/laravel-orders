@@ -313,10 +313,13 @@ class Cart implements CartInterface
                     $lineTotalPrice = $currentLineProduct->getUnitPrice() * $line['quantity'];
                     $orderTotalPrice += $lineTotalPrice;
 
+                    // dd($currentLineProduct->getExternalId());
                     $line = array_merge($line, [
                         'total_price' => $lineTotalPrice,
                         'unit_price' => $currentLineProduct->getUnitPrice(),
-                        'product' => $currentLineProduct->toArray()
+                        'product' => $currentLineProduct->toArray(),
+                        'product_id' => $currentLineProduct->getId(),
+                        'external_id' => $currentLineProduct->getExternalId()
                     ]);
                 }
             }
