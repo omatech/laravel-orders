@@ -33,7 +33,7 @@ class Cart implements CartInterface
      * @return Cart
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    static public function find(int $id): ?Cart
+    public static function find(int $id): ?Cart
     {
         $find = app()->make(FindCart::class);
         return $find->make($id);
@@ -43,7 +43,7 @@ class Cart implements CartInterface
      * @return array
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    static public function findAll(): array
+    public static function findAll(): array
     {
         $find = app()->make(FindAllCarts::class);
         return $find->make();
@@ -117,11 +117,13 @@ class Cart implements CartInterface
             }
         }
 
-        if ($billingData)
+        if ($billingData) {
             $this->setBillingData(app()->make(BillingData::class)->fromArray($billingData));
+        }
 
-        if ($deliveryAddress)
+        if ($deliveryAddress) {
             $this->setDeliveryAddress(app()->make(DeliveryAddress::class)->fromArray($deliveryAddress));
+        }
 
         return $this;
     }
@@ -241,19 +243,44 @@ class Cart implements CartInterface
         $this->save->save($this);
     }
 
+    public function removeProduct(Product $product)
+    {
+        foreach ($this->cartLines as $index => &$currentProduct) {
+            if ($currentProduct->getProductId() == $product->getId()) {
+                $currentProduct->setQuantity($currentProduct->getQuantity() * -1);
+                break;
+            }
+        }
+    }
+
+    public function setProductQuantity(Product $product)
+    {
+        foreach ($this->cartLines as &$currentProduct) {
+            if ($currentProduct->getProductId() == $product->getId()) {
+                $currentProduct->setQuantity($product->getRequestedQuantity());
+                break;
+            }
+        }
+    }
+
     public function push(Product $product): void
     {
         $merge = true;
+        
         foreach ($this->cartLines as &$currentProduct) {
             if ($currentProduct->getProductId() == $product->getId()) {
+
+                $totalQuantity = $currentProduct->getQuantity() + $product->getRequestedQuantity();
+                $currentProduct->setQuantity($totalQuantity);
+                
                 $merge = false;
-                $currentProduct->setQuantity($currentProduct->getQuantity() + $product->getRequestedQuantity());
                 break;
             }
         }
 
-        if ($merge)
+        if ($merge) {
             array_push($this->cartLines, $product->toCartLine());
+        }
     }
 
     public function pop(Product $product): void
@@ -307,7 +334,6 @@ class Cart implements CartInterface
             foreach ($data['lines'] as &$line) {
                 $lineTotalPrice = 0;
                 if (!empty($line['product_id'])) {
-
                     $currentLineProduct = app(Product::class)->find($line['product_id']);
                     $currentLineProduct->setRequestedQuantity($line['quantity']);
                     $lineTotalPrice = $currentLineProduct->getUnitPrice() * $line['quantity'];
@@ -316,9 +342,7 @@ class Cart implements CartInterface
                     $line = array_merge($line, [
                         'total_price' => $lineTotalPrice,
                         'unit_price' => $currentLineProduct->getUnitPrice(),
-                        'product' => $currentLineProduct->toArray(),
-                        'product_id' => $currentLineProduct->getId(),
-                        'external_id' => $currentLineProduct->getExternalId()
+                        'product' => $currentLineProduct->toArray()
                     ]);
                 }
             }
