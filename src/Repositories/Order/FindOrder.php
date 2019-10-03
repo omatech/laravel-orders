@@ -89,7 +89,7 @@ class FindOrder extends OrderRepository
 
         //Order Lines
         $orderLines = $order->orderLines()->get();
-        dd($orderLines);
+
         foreach ($orderLines as $orderLine) {
             $currentOrderLine = $this->orderLine->fromArray([
                 'id' => $orderLine->id,
