@@ -13,6 +13,8 @@ class OrderLine implements OrderLineInterface
     private $totalPrice;
     private $unitPrice;
     private $product;
+    private $product_id;
+
 
     /**
      * OrderLine constructor.
@@ -44,6 +46,8 @@ class OrderLine implements OrderLineInterface
         if (key_exists('product', $data)) {
             $this->setProduct(app(Product::class)->fromArray($data['product']));
         }
+        if (key_exists('product_id', $data))
+            $this->setProductId($data['product_id']);
 
         return $this;
     }
@@ -137,13 +141,31 @@ class OrderLine implements OrderLineInterface
     }
 
     /**
+     * @return mixed
+     */
+    public function getProductId(): int
+    {
+        return $this->product_id;
+    }
+    /**
+     * @param mixed $product_id
+     */
+    public function setProductId(int $product_id = null): void
+    {
+        $this->product_id = $product_id;
+    }
+    
+
+    /**
      * @return Product
      */
     public function getProduct(): Product
     {
         $this->product = app(Product::class)->fromArray([
             'requestedQuantity' => $this->quantity,
-            'unitPrice' => $this->unitPrice
+            'unitPrice' => $this->unitPrice,
+            'unitPrice' => $this->unitPrice,
+            'product_id' => $this->product_id
         ]);
 
         return $this->product;

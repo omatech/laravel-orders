@@ -342,7 +342,9 @@ class Cart implements CartInterface
                     $line = array_merge($line, [
                         'total_price' => $lineTotalPrice,
                         'unit_price' => $currentLineProduct->getUnitPrice(),
-                        'product' => $currentLineProduct->toArray()
+                        'product' => $currentLineProduct->toArray(),
+                        'product_id' => $currentLineProduct->getId(),
+                        'external_id' => $currentLineProduct->getExternalId()
                     ]);
                 }
             }
