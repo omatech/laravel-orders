@@ -22,6 +22,8 @@ interface Cart
 
     public function save();
 
+    public function setProductQuantity(Product $product);
+
     public function push(Product $product);
 
     public function pop(Product $product);

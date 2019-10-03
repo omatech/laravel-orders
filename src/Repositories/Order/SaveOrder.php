@@ -37,8 +37,7 @@ class SaveOrder extends OrderRepository implements SaveOrderInterface
                     'order_id' => $order->getId(),
                     'quantity' => $orderLine->getQuantity(),
                     'unit_price' => $orderLine->getUnitPrice(),
-                    'total_price' => $orderLine->getTotalPrice(),
-                    'product_id' => $orderLine->getProductId()
+                    'total_price' => $orderLine->getTotalPrice()
                 ]);
 
                 $this->prepareProductFields($currentLine);
@@ -46,7 +45,6 @@ class SaveOrder extends OrderRepository implements SaveOrderInterface
                 $model->orderLines()->updateOrCreate([
                     'id' => $orderLine->getId(),
                     'order_id' => $order->getId(),
-                    'product_id' => $orderLine->getProductId()
                 ], $currentLine);
 
             }

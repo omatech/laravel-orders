@@ -67,6 +67,7 @@ class Order implements OrderInterface
     public static function find(int $id): ?self
     {
         $find = app()->make(FindOrder::class);
+
         return $find->make($id);
     }
 

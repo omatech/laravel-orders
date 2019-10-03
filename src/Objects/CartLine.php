@@ -180,7 +180,6 @@ class CartLine implements \Omatech\LaravelOrders\Contracts\CartLine
             'total_price' => $this->getTotalPrice(),
             'unit_price' => $product->getUnitPrice(),
             'product' => $product,
-            'product_id' => $product->getProductId()
         ]);
     }
 }
