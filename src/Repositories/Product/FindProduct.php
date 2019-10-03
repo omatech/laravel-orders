@@ -29,7 +29,7 @@ class FindProduct extends ProductRepository implements FindProductInterface
      * @param int $id
      * @return mixed
      */
-    public function make(int $id): ?Product
+    public function make(int $id)
     {
         $product = $this->model->find($id);
 
