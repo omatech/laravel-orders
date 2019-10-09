@@ -30,4 +30,9 @@ interface Cart
 
     public function getCartLines();
 
+    public function calculateDiscount($totalPrice, $discount);
+
+    public function getPromoCodeId();
+
+    public function setPromoCodeId($promoCodeId);
 }

@@ -11,6 +11,10 @@ use Omatech\LaravelOrders\Contracts\FindCart;
 use Omatech\LaravelOrders\Contracts\Order;
 use Omatech\LaravelOrders\Contracts\Product;
 use Omatech\LaravelOrders\Contracts\SaveCart;
+use Omatech\LaravelPromoCodes\Facade\PromoCode as PromoCodeFacade;
+use Omatech\LaravelOrders\Models\Cart as CartModel;
+
+
 
 class Cart implements CartInterface
 {
@@ -20,6 +24,8 @@ class Cart implements CartInterface
     private $billingData;
     private $totalPrice;
     private $numCartLines = 0;
+    private $finalPrice;
+    private $promoCodeId;
 
     private $save;
 
@@ -62,6 +68,7 @@ class Cart implements CartInterface
         $notSettableFromArray = [];
         $fillable = [
             'id',
+            'promo_code_id',
             'delivery_address_first_name',
             'delivery_address_last_name',
             'delivery_address_first_line',
@@ -125,8 +132,14 @@ class Cart implements CartInterface
             $this->setDeliveryAddress(app()->make(DeliveryAddress::class)->fromArray($deliveryAddress));
         }
 
+        if (empty($this->getCartLines())){
+            CartModel::where('id', $this->getId())->update(['promo_code_id' => null]);
+        }
+
         return $this;
     }
+
+
 
     /**
      * @param array $data
@@ -152,6 +165,23 @@ class Cart implements CartInterface
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+
+    /**
+     * @param $finalPrice
+     */
+    public function setFinalPrice($finalPrice): void
+    {
+        $this->finalPrice = $finalPrice;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFinalPrice(): ?int
+    {
+        return $this->finalPrice;
     }
 
     /**
@@ -192,6 +222,7 @@ class Cart implements CartInterface
     public function getTotalPrice(): float
     {
         $cartLines = $this->getCartLines();
+
         $totalPrice = 0;
 
         foreach ($cartLines as $cartLine) {
@@ -200,7 +231,22 @@ class Cart implements CartInterface
 
         $this->totalPrice = $totalPrice;
 
+        if(!is_null($this->getPromoCodeId())){
+            $promoCode = PromoCodeFacade::find($this->getPromoCodeId());
+            $this->totalPrice = $this->calculateDiscount($this->totalPrice, $promoCode->getPctDiscount());
+        }
+
         return $this->totalPrice;
+    }
+
+
+    public function calculateDiscount($totalPrice, $discount){
+        $discount  = floatval($discount);
+        $finalPrice = $totalPrice;
+        if($discount > 0){
+            $finalPrice = ($totalPrice - ( $totalPrice * $discount / 100 ));
+        }
+        return $finalPrice;
     }
 
     /**
@@ -297,6 +343,22 @@ class Cart implements CartInterface
     public function getCartLines(): array
     {
         return $this->cartLines;
+    }
+
+    /**
+     * @param $promoCodeId
+     */
+    public function setPromoCodeId($promoCodeId): void
+    {
+        $this->promoCodeId = $promoCodeId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPromoCodeId()
+    {
+        return $this->promoCodeId;
     }
 
     /**
